@@ -6,40 +6,50 @@
 
 #define txt "scene.txt";
 
-struct tnode {
-  	std::string phrase;
-  	struct tnode *left;
-  	struct tnode *right;
+class Tree {
+public:
+	struct Node {
+  		std::string phrase;
+  		struct tnode *left;
+  		struct tnode *right;
+	};
 };
-typedef struct tnode tree;
+
+class Unit {
+public:
+	virtual void draw();
+	virtual void update();
+	virtual char* serealize();
+	virtual Unit deserealize();
+
+	Unit(int x = 0, int y = 0);
+	virtual ~Unit();
+
+};
+
+struct Vec2 {
+	int x = 0;
+	int y = 0;
+};
 
 class Scene {
 private: 
 	char* data; //мб там хранить все в виде эффективного массива 
 									//плюс туда (де)сереализация
-	//std::map<std::string, std::shared_ptr<Unit*>> containing_units; тут вылазит ошибка синтаксисиса я хз
+	std::map<std::string, std::shared_ptr<Unit>> containing_units;
 	int width = 100;
 	int heigh = 100;
 public:
-	void load_from_file();
+	Scene(std::string sw);
+	~Scene();
+
 	void save_to_file();
-	void draw_the_scene();
-	void update_the_scene();
-};
+	void draw();
+	void update();
+	std::string serealize();
+	void add_unit(std::string name, std::shared_ptr<Unit> ptr);
+	void delete_unit(std::string name);
 
-class Unit {
-protected:
-	int position_x = 0;
-	int position_y = 0;
-public:
-	virtual int* get_positions(); //массив из двух x и y
-	virtual void draw();
-	virtual void update();
-	virtual void serealize();
-	virtual Unit deserealize();
-
-	Unit(int x = 0, int y = 0);
-	virtual ~Unit();
 
 };
 
@@ -48,15 +58,16 @@ private:
 	int position_x = 0;
 	int position_y = 0;
 	std::vector<std::string> phrases;
-	tree tree_of_phrases;
+	Tree tree_of_phrases;
 public:
-	int* get_positions(); //массив из двух x и y
+	virtual Vec2 get_positions();
+	virtual void talk(Unit* talker);
+
 	void draw();
 	void update();
-	void serealize();
+	char* serealize();
 	Unit deserealize();
-	void talk(Unit* talker);
-	void move(int direction);
+	
 	Person(int x = 0, int y = 0);
 	~Person();
 };
@@ -66,11 +77,13 @@ private:
 	int position_x = 0;
 	int position_y = 0;
 public:
-	int* get_positions(); //массив из двух x и y
+	virtual Vec2 get_positions();
+
 	void draw();
 	void update();
-	void serealize();
+	char* serealize();
 	Unit deserealize();
+
 	Object(int x = 0, int y = 0);
 	~Object();
 };
