@@ -36,7 +36,10 @@ class Scene {
 private: 
 	char* data; //мб там хранить все в виде эффективного массива 
 									//плюс туда (де)сереализация
-	std::map<std::string, std::shared_ptr<Unit>> containing_units;
+
+	using UnitContainer = std::map<std::string, std::shared_ptr<Unit>>;
+	using UnitIter = UnitContainer::iterator;
+	UnitContainer containing_units;
 	int width = 100;
 	int heigh = 100;
 public:
@@ -47,42 +50,40 @@ public:
 	void draw();
 	void update();
 	std::string serealize();
-	void add_unit(std::string name, std::shared_ptr<Unit> ptr);
-	void delete_unit(std::string name);
 
+	template<typename UnitType, typename ...Args>
+		std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args);
+
+		Vec2 get_bound() { return {0, 0}; }
+		void delete_unit(std::string name);
+
+		UnitIter begin() {
+			return containing_units.begin();
+		}
+		std::map<std::string, std::shared_ptr<Unit>>::iterator end() {
+			return containing_units.end();
+		}
 
 };
 
 class Person : Unit {
-private:
-	int position_x = 0;
-	int position_y = 0;
+protected:
+	Vec2 positions;
 	std::vector<std::string> phrases;
 	Tree tree_of_phrases;
 public:
 	virtual Vec2 get_positions();
-	virtual void talk(Unit* talker);
+	virtual void talk(Person* talker);
 
-	void draw();
-	void update();
-	char* serealize();
-	Unit deserealize();
-	
 	Person(int x = 0, int y = 0);
 	~Person();
 };
 
 class Object : Unit {
 private:
-	int position_x = 0;
-	int position_y = 0;
+	Vec2 positions;
 public:
 	virtual Vec2 get_positions();
-
-	void draw();
-	void update();
-	char* serealize();
-	Unit deserealize();
 
 	Object(int x = 0, int y = 0);
 	~Object();
