@@ -4,3 +4,5 @@ add_executable(${CMAKE_PROJECT_NAME} main.cpp)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE model)
 add_subdirectory(model)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GL)
