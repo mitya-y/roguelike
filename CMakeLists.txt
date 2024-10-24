@@ -9,3 +9,4 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE application)
 add_subdirectory(application)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GL)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
