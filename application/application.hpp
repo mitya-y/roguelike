@@ -27,6 +27,7 @@ public:
   ~Application();
 
   void start(std::unique_ptr<Scene> scene);
+  void render(void);
   Scene &get_scene();
   void set_scene(std::unique_ptr<Scene> scene);
   double timer();

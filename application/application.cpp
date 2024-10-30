@@ -1,10 +1,14 @@
+#include "GL/glew.h"
+#include <OpenGL/OpenGL.h>
 #include <iostream>
-#include <stdexcept>
 #include <memory>
+#include <stdexcept>
 
 #include <GLFW/glfw3.h>
 
 #include "application.hpp"
+#include "GL/gl.h"
+#include "GL/glcorearb.h"
 
 Application::Application() {
   glfwInit();
@@ -17,7 +21,6 @@ Application::~Application() {}
 
 void Application::start(std::unique_ptr<Scene> scene) {
   // set scene
-
   _window = glfwCreateWindow(800, 600, "roguelike", nullptr, nullptr);
   if (_window == nullptr) {
     throw std::runtime_error("Failed to create GLFW window");
@@ -25,9 +28,28 @@ void Application::start(std::unique_ptr<Scene> scene) {
   }
   glfwMakeContextCurrent(_window);
 
+  // init OpenGL
+  GLenum glewStatus = glewInit();
+  if (glewStatus != GLEW_OK) {
+    std::cerr << "Error initializing GLEW: " << glewGetErrorString(glewStatus)
+              << std::endl;
+    exit(0);
+  }
+  glClearColor(0.30, 0.47, 0.8, 1);
+  glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+  // wglSwapIntervalEXT - вертикальная синхронизация
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(-1);
+  //set Camera
+  // wglSwapIntervalEXT - выключить вертикальную синхронизацию
+
   while (not glfwWindowShouldClose(_window)) {
     // render scene
-
+    render();
     glfwSwapBuffers(_window);
     glfwPollEvents();
   }
@@ -40,6 +62,21 @@ bool Application::key_pressed(int key) {
     return false;
   }
   return glfwGetKey(_window, key) == GLFW_PRESS;
+}
+
+void Application::render() {
+  // timer responce
+  // input responce
+
+  // clear frame
+  int modes[2];
+  glGetIntegerv(GL_POLYGON_MODE, modes);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Render all units
+
+  glFinish();
+  // draw all units in current scene for (auto unit : scene.units) unit.draw();
 }
 
 Scene &Application::get_scene() { return *scene; }
