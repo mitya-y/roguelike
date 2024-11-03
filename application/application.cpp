@@ -1,14 +1,17 @@
-#include "GL/glew.h"
-#include <OpenGL/OpenGL.h>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <GL/gl.h>
 
 #include "application.hpp"
-#include "GL/gl.h"
+
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
 #include "GL/glcorearb.h"
+#endif
 
 Application::Application() {
   glfwInit();
@@ -40,12 +43,12 @@ void Application::start(std::unique_ptr<Scene> scene) {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
-  // wglSwapIntervalEXT - вертикальная синхронизация
+
+  // wglSwapIntervalEXT - vertical sync
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
   //set Camera
-  // wglSwapIntervalEXT - выключить вертикальную синхронизацию
+  // wglSwapIntervalEXT - enable vertical sync
 
   while (not glfwWindowShouldClose(_window)) {
     // render scene
@@ -74,6 +77,9 @@ void Application::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Render all units
+
+  // static Model model(Model::GeometryType::Plane);
+  // model.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();

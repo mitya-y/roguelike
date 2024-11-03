@@ -62,6 +62,7 @@ Model::Model(GeometryType geom_type) : _type(geom_type) {
   }
 
   load_to_gpu(vertexes, indexes);
+  indexes_number = indexes.size();
 
   calculate_bound_box(vertexes);
 }
@@ -169,7 +170,15 @@ const Model::BoundBox & Model::get_bound_box() {
 
 void Model::load_texture(std::string_view filename) {}
 
-void Model::draw() {}
+void Model::draw() {
+  glBindVertexArray(vertex_array);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+  glDrawElements(GL_TRIANGLES, indexes_number, GL_UNSIGNED_INT, nullptr);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+
+  glUseProgram(0);
+}
 
 Model::Model(Model &&other) {
   std::swap(vertex_array, other.vertex_array);

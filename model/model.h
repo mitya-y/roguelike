@@ -42,6 +42,7 @@ private:
 
   GeometryType _type {};
   bool _is_loaded = false;
+  uint32_t indexes_number = 0;
 
   // opengl stuff
   uint32_t vertex_array {};
