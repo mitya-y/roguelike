@@ -8,4 +8,8 @@ add_subdirectory(model)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE application)
 add_subdirectory(application)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GL)
+find_package(GLEW REQUIRED)
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GLEW::GLEW OpenGL::GL)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
