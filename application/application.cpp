@@ -1,0 +1,99 @@
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <GL/gl.h>
+
+#include "application.hpp"
+
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#include "GL/glcorearb.h"
+#endif
+
+Application::Application() {
+  glfwInit();
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+}
+
+Application::~Application() {}
+
+void Application::start(std::unique_ptr<Scene> scene) {
+  // set scene
+  _window = glfwCreateWindow(800, 600, "roguelike", nullptr, nullptr);
+  if (_window == nullptr) {
+    throw std::runtime_error("Failed to create GLFW window");
+    glfwTerminate();
+  }
+  glfwMakeContextCurrent(_window);
+
+  // init OpenGL
+  GLenum glewStatus = glewInit();
+  if (glewStatus != GLEW_OK) {
+    std::cerr << "Error initializing GLEW: " << glewGetErrorString(glewStatus)
+              << std::endl;
+    exit(0);
+  }
+  glClearColor(0.30, 0.47, 0.8, 1);
+  glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  // wglSwapIntervalEXT - vertical sync
+  glEnable(GL_PRIMITIVE_RESTART);
+  glPrimitiveRestartIndex(-1);
+  //set Camera
+  // wglSwapIntervalEXT - enable vertical sync
+
+  while (not glfwWindowShouldClose(_window)) {
+    // render scene
+    render();
+    glfwSwapBuffers(_window);
+    glfwPollEvents();
+  }
+
+  glfwTerminate();
+}
+
+bool Application::key_pressed(int key) {
+  if (_window == nullptr) {
+    return false;
+  }
+  return glfwGetKey(_window, key) == GLFW_PRESS;
+}
+
+void Application::render() {
+  // timer responce
+  // input responce
+
+  // clear frame
+  int modes[2];
+  glGetIntegerv(GL_POLYGON_MODE, modes);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Render all units
+
+  // static Model model(Model::GeometryType::Plane);
+  // model.draw();
+
+  glFinish();
+  // draw all units in current scene for (auto unit : scene.units) unit.draw();
+}
+
+Scene &Application::get_scene() { return *scene; }
+
+void Application::set_scene(std::unique_ptr<Scene> scene) {}
+
+double Application::timer() { return 0.0; }
+
+std::shared_ptr<Model> Application::create_model() { return {}; }
+
+void Application::delete_model(std::shared_ptr<Model> model) {}
+
+void Application::draw_model(const Model &model, const Vec3 &scale,
+                             const Vec3 &translate, const Rotation &rotate) {}
