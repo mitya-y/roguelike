@@ -13,3 +13,5 @@ find_package(OpenGL REQUIRED)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE GLEW::GLEW OpenGL::GL)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE ASSETS_DIRECTORY="${CMAKE_SOURCE_DIR}/datasets")
