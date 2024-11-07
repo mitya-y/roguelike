@@ -1,6 +1,8 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,6 +24,10 @@ Application::Application() {
 
 Application::~Application() {}
 
+void Application::window_size_callback(GLFWwindow* window, int width, int height) {
+  glViewport(0, 0, width, height);
+}
+
 void Application::start(std::unique_ptr<Scene> scene) {
   // set scene
   _window = glfwCreateWindow(800, 600, "roguelike", nullptr, nullptr);
@@ -29,6 +35,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     throw std::runtime_error("Failed to create GLFW window");
     glfwTerminate();
   }
+  glfwSetWindowSizeCallback(_window, window_size_callback);
   glfwMakeContextCurrent(_window);
 
   // init OpenGL
@@ -47,6 +54,16 @@ void Application::start(std::unique_ptr<Scene> scene) {
   // wglSwapIntervalEXT - vertical sync
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(glDebugOutput, NULL);
+  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+
+  int width, height;
+  glfwGetWindowSize(_window, &width, &height);
+  glViewport(0, 0, width, height);
+
   //set Camera
   // wglSwapIntervalEXT - enable vertical sync
 
@@ -78,8 +95,8 @@ void Application::render() {
 
   // Render all units
 
-  // static Model model(Model::GeometryType::Plane);
-  // model.draw();
+  static Model model(Model::GeometryType::Plane);
+  model.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();

@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <GLFW/glfw3.h>
+#include <GL/gl.h>
 
 #include "../model/model.h"
 
@@ -37,4 +38,10 @@ public:
                   const Rotation &rotate);
   // key is GLFW_KEY_*
   bool key_pressed(int key);
+
+private:
+  static void APIENTRY glDebugOutput(GLenum Source, GLenum Type, GLuint Id, GLenum Severity,
+                                     GLsizei Length, const GLchar *Message, const void *UserParam);
+
+  static void window_size_callback(GLFWwindow* window, int width, int height);
 };
