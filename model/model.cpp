@@ -3,12 +3,14 @@
 #include <cassert>
 #include <cmath>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 
 #include "model.h"
+#include "application.hpp"
 
 void Model::load_shader(const std::string &shader_name) {
   // open files
@@ -112,12 +114,12 @@ void Model::load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &ind
     vert.color = {1, 1, 0};
   }
 
-  float scale = 0.8;
+  float scale = 1;
 
-  vertexes[0].position = {scale, scale, 0};
-  vertexes[1].position = {scale, -scale, 0};
-  vertexes[2].position = {-scale, -scale, 0};
-  vertexes[3].position = {-scale, scale, 0};
+  vertexes[0].position = {scale,  0, scale };
+  vertexes[1].position = {scale,  0, -scale};
+  vertexes[2].position = {-scale, 0, -scale};
+  vertexes[3].position = {-scale, 0, scale };
 
   vertexes[0].texture_coords = {1, 1};
   vertexes[1].texture_coords = {1, 0};
@@ -261,6 +263,11 @@ void Model::load_texture(std::string_view filename) {}
 
 void Model::draw() {
   glUseProgram(_program_id);
+
+  auto vp = Application::get_app().view_projection();
+  // vp = glm::identity<glm::mat4>();
+  uint32_t vp_id = glGetUniformLocation(_program_id, "MVP");
+  glUniformMatrix4fv(vp_id, 1, false, &vp[0][0]);
 
   glBindVertexArray(_vertex_array);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index_buffer);
