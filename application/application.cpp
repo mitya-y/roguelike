@@ -46,6 +46,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     exit(0);
   }
   glClearColor(0.30, 0.47, 0.8, 1);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -73,7 +74,8 @@ void Application::start(std::unique_ptr<Scene> scene) {
   }
 
   _projection = glm::frustum(-rx / 2, rx / 2, -ry / 2, ry / 2, 0.1f, 100.0f);
-  _view = glm::lookAt(glm::vec3(2), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  _camera_position = glm::vec3(2.3, 1.5, 0);
+  _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
 
   //set Camera
@@ -105,10 +107,11 @@ void Application::render() {
   glGetIntegerv(GL_POLYGON_MODE, modes);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  float time = clock() / 100000.0;
-  float x = cos(time), y = sin(time);
-  _view = glm::lookAt(glm::vec3(2.0 * x, 3.0, 2.0 * y), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-  _view_projection = _projection * _view;
+  // float time = timer();
+  // float x = cos(time), y = sin(time);
+  // _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
+  // _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  // _view_projection = _projection * _view;
   // Render all units
 
   static Model model(Model::GeometryType::Plane);
@@ -122,9 +125,11 @@ Scene & Application::get_scene() { return *scene; }
 
 const glm::highp_mat4 & Application::view_projection() { return _view_projection; }
 
+const glm::vec3 & Application::camera_position() { return _camera_position; }
+
 void Application::set_scene(std::unique_ptr<Scene> scene) {}
 
-double Application::timer() { return 0.0; }
+double Application::timer() { return clock() / 100000.0; }
 
 std::shared_ptr<Model> Application::create_model() { return {}; }
 

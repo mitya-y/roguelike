@@ -19,6 +19,8 @@ private:
   glm::highp_mat4 _projection {};
   glm::highp_mat4 _view_projection {};
 
+  glm::vec3 _camera_position {};
+
   std::unique_ptr<Scene> scene;
 
   Application();
@@ -46,6 +48,7 @@ public:
   bool key_pressed(int key);
 
   const glm::highp_mat4 & view_projection();
+  const glm::vec3 & camera_position();
 
 private:
   static void APIENTRY glDebugOutput(GLenum Source, GLenum Type, GLuint Id, GLenum Severity,

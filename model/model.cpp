@@ -265,9 +265,16 @@ void Model::draw() {
   glUseProgram(_program_id);
 
   auto vp = Application::get_app().view_projection();
-  // vp = glm::identity<glm::mat4>();
   uint32_t vp_id = glGetUniformLocation(_program_id, "MVP");
   glUniformMatrix4fv(vp_id, 1, false, &vp[0][0]);
+
+  auto cam_pos = Application::get_app().camera_position();
+  uint32_t cam_pos_id = glGetUniformLocation(_program_id, "CameraPos");
+  glUniform3f(cam_pos_id, cam_pos[0], cam_pos[1], cam_pos[2]);
+
+  float time = Application::get_app().timer();
+  uint32_t time_id = glGetUniformLocation(_program_id, "Time");
+  glUniform1f(time_id, time);
 
   glBindVertexArray(_vertex_array);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index_buffer);
