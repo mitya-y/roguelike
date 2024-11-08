@@ -42,16 +42,18 @@ private:
 
   GeometryType _type {};
   bool _is_loaded = false;
-  uint32_t indexes_number = 0;
+  uint32_t _indexes_number = 0;
 
   // opengl stuff
-  uint32_t vertex_array {};
-  uint32_t vertex_buffer {};
-  uint32_t index_buffer {};
+  uint32_t _vertex_array {};
+  uint32_t _vertex_buffer {};
+  uint32_t _index_buffer {};
+
+  uint32_t _program_id {};
 
 public:
   Model(std::string_view filename);
-  Model(GeometryType geom_type);
+  Model(GeometryType geom_type, const std::string &shader_path = "default");
 
   Model(const Model &other) = delete;
   Model & operator=(const Model &other) = delete;
@@ -69,6 +71,7 @@ private:
   void load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
 
   void load_to_gpu(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
+  void load_shader(const std::string &shader_name);
 
 public:
   const Vec3 & scale(const Vec3 &scale = {1, 1, 1});

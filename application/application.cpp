@@ -1,6 +1,8 @@
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -22,6 +24,10 @@ Application::Application() {
 
 Application::~Application() {}
 
+void Application::window_size_callback(GLFWwindow* window, int width, int height) {
+  glViewport(0, 0, width, height);
+}
+
 void Application::start(std::unique_ptr<Scene> scene) {
   // set scene
   _window = glfwCreateWindow(800, 600, "roguelike", nullptr, nullptr);
@@ -29,6 +35,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     throw std::runtime_error("Failed to create GLFW window");
     glfwTerminate();
   }
+  glfwSetWindowSizeCallback(_window, window_size_callback);
   glfwMakeContextCurrent(_window);
 
   // init OpenGL
@@ -39,6 +46,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     exit(0);
   }
   glClearColor(0.30, 0.47, 0.8, 1);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -47,6 +55,29 @@ void Application::start(std::unique_ptr<Scene> scene) {
   // wglSwapIntervalEXT - vertical sync
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
+
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(glDebugOutput, NULL);
+  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+
+  int width, height;
+  glfwGetWindowSize(_window, &width, &height);
+  glViewport(0, 0, width, height);
+
+  float rx, ry;
+  rx = ry = 0.1;
+  if (width > height) {
+    rx *= float(width) / float(height);
+  } else {
+    ry *= float(height) / float(width);
+  }
+
+  _projection = glm::frustum(-rx / 2, rx / 2, -ry / 2, ry / 2, 0.1f, 100.0f);
+  _camera_position = glm::vec3(2.3, 1.5, 0);
+  _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  _view_projection = _projection * _view;
+
   //set Camera
   // wglSwapIntervalEXT - enable vertical sync
 
@@ -76,20 +107,29 @@ void Application::render() {
   glGetIntegerv(GL_POLYGON_MODE, modes);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  // float time = timer();
+  // float x = cos(time), y = sin(time);
+  // _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
+  // _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  // _view_projection = _projection * _view;
   // Render all units
 
-  // static Model model(Model::GeometryType::Plane);
-  // model.draw();
+  static Model model(Model::GeometryType::Plane);
+  model.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();
 }
 
-Scene &Application::get_scene() { return *scene; }
+Scene & Application::get_scene() { return *scene; }
+
+const glm::highp_mat4 & Application::view_projection() { return _view_projection; }
+
+const glm::vec3 & Application::camera_position() { return _camera_position; }
 
 void Application::set_scene(std::unique_ptr<Scene> scene) {}
 
-double Application::timer() { return 0.0; }
+double Application::timer() { return clock() / 100000.0; }
 
 std::shared_ptr<Model> Application::create_model() { return {}; }
 
