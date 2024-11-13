@@ -10,11 +10,6 @@
 
 #include "application.hpp"
 
-#ifdef __APPLE__
-#include <OpenGL/OpenGL.h>
-#include "GL/glcorearb.h"
-#endif
-
 Application::Application() {
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -46,7 +41,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     exit(0);
   }
   glClearColor(0.30, 0.47, 0.8, 1);
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+  //glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -56,10 +51,10 @@ void Application::start(std::unique_ptr<Scene> scene) {
   glEnable(GL_PRIMITIVE_RESTART);
   glPrimitiveRestartIndex(-1);
 
-  glEnable(GL_DEBUG_OUTPUT);
+  /*glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
   glDebugMessageCallback(glDebugOutput, NULL);
-  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);*/
 
   int width, height;
   glfwGetWindowSize(_window, &width, &height);
@@ -107,11 +102,11 @@ void Application::render() {
   glGetIntegerv(GL_POLYGON_MODE, modes);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // float time = timer();
-  // float x = cos(time), y = sin(time);
-  // _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
-  // _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
-  // _view_projection = _projection * _view;
+  float time = timer();
+  float x = cos(time), y = sin(time);
+  _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
+  _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  _view_projection = _projection * _view;
   // Render all units
 
   static Model model(Model::GeometryType::Plane);

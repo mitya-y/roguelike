@@ -1,96 +1,100 @@
 #include <array>
-#include <stdexcept>
 #include <cassert>
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 
-#include "model.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "application.hpp"
+#include "model.h"
 
 void Model::load_shader(const std::string &shader_name) {
   // open files
-  constexpr auto shaders_base_directory = ASSETS_DIRECTORY"/shaders/";
+  constexpr auto shaders_base_directory = ASSETS_DIRECTORY "/shaders/";
   std::string shader_directory = shaders_base_directory + shader_name + '/';
 
   std::string vertex_file_path = shader_directory + "vert.glsl";
-	std::ifstream vert_file(vertex_file_path.data());
+  std::ifstream vert_file(vertex_file_path.data());
   if (not vert_file) {
     throw std::runtime_error("cant open shader" + vertex_file_path);
   }
 
   std::string fragment_file_path = shader_directory + "frag.glsl";
-	std::ifstream fraq_file(fragment_file_path.data());
-	if (not fraq_file) {
+  std::ifstream fraq_file(fragment_file_path.data());
+  if (not fraq_file) {
     throw std::runtime_error("cant open shader" + fragment_file_path);
-	}
+  }
 
   // load data
-	std::stringstream sstr_vert;
-	sstr_vert << vert_file.rdbuf();
-	std::string vert_code = sstr_vert.str();
+  std::stringstream sstr_vert;
+  sstr_vert << vert_file.rdbuf();
+  std::string vert_code = sstr_vert.str();
 
-	std::stringstream sstr_frag;
-	sstr_frag << fraq_file.rdbuf();
-	std::string frag_code = sstr_frag.str();
+  std::stringstream sstr_frag;
+  sstr_frag << fraq_file.rdbuf();
+  std::string frag_code = sstr_frag.str();
 
   // compile shaders
-	int error_info_lenght = 0;
+  int error_info_lenght = 0;
 
-	// Compile Vertex Shader
-	GLuint vert_id = glCreateShader(GL_VERTEX_SHADER);
-	char const *vert_data = vert_code.c_str();
-	glShaderSource(vert_id, 1, &vert_data, nullptr);
-	glCompileShader(vert_id);
+  // Compile Vertex Shader
+  GLuint vert_id = glCreateShader(GL_VERTEX_SHADER);
+  char const *vert_data = vert_code.c_str();
+  glShaderSource(vert_id, 1, &vert_data, nullptr);
+  glCompileShader(vert_id);
 
-	// Check Vertex Shader
-	glGetShaderiv(vert_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
-	if (error_info_lenght > 0) {
-		std::vector<char> error_msg(error_info_lenght + 1);
-		glGetShaderInfoLog(vert_id, error_info_lenght, nullptr, error_msg.data());
-		printf("%s\n", error_msg.data());
-    throw std::runtime_error("shader compile error");
-	}
+  // Check Vertex Shader
+  glGetShaderiv(vert_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
+  if (error_info_lenght > 0) {
+    std::vector<char> error_msg(error_info_lenght + 1);
+    glGetShaderInfoLog(vert_id, error_info_lenght, nullptr, error_msg.data());
+    printf("%s\n", error_msg.data());
+    // throw std::runtime_error("shader compile error");
+  }
 
-	// Compile Fragment Shader
-	GLuint frag_id = glCreateShader(GL_FRAGMENT_SHADER);
-	char const *frag_data = frag_code.c_str();
-	glShaderSource(frag_id, 1, &frag_data, nullptr);
-	glCompileShader(frag_id);
+  // Compile Fragment Shader
+  GLuint frag_id = glCreateShader(GL_FRAGMENT_SHADER);
+  char const *frag_data = frag_code.c_str();
+  glShaderSource(frag_id, 1, &frag_data, nullptr);
+  glCompileShader(frag_id);
 
-	// Check Fragment Shader
-	glGetShaderiv(frag_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
-	if (error_info_lenght > 0) {
-		std::vector<char> error_msg(error_info_lenght + 1);
-		glGetShaderInfoLog(frag_id, error_info_lenght, nullptr, error_msg.data());
-		printf("%s\n", error_msg.data());
-    throw std::runtime_error("shader compile error");
-	}
+  // Check Fragment Shader
+  glGetShaderiv(frag_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
+  if (error_info_lenght > 0) {
+    std::vector<char> error_msg(error_info_lenght + 1);
+    glGetShaderInfoLog(frag_id, error_info_lenght, nullptr, error_msg.data());
+    printf("%s\n", error_msg.data());
+    // throw std::runtime_error("shader compile error");
+  }
 
-	// Link the program
-	_program_id = glCreateProgram();
-	glAttachShader(_program_id, vert_id);
-	glAttachShader(_program_id, frag_id);
-	glLinkProgram(_program_id);
+  // Link the program
+  _program_id = glCreateProgram();
+  glAttachShader(_program_id, vert_id);
+  glAttachShader(_program_id, frag_id);
+  glLinkProgram(_program_id);
 
-	// Check the program
-	glGetProgramiv(_program_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
-	if (error_info_lenght > 0) {
-		std::vector<char> error_msg(error_info_lenght + 1);
-		glGetProgramInfoLog(_program_id, error_info_lenght, nullptr, error_msg.data());
-		printf("%s\n", error_msg.data());
-    throw std::runtime_error("shader compile error");
-	}
+  // Check the program
+  glGetProgramiv(_program_id, GL_INFO_LOG_LENGTH, &error_info_lenght);
+  if (error_info_lenght > 0) {
+    std::vector<char> error_msg(error_info_lenght + 1);
+    glGetProgramInfoLog(_program_id, error_info_lenght, nullptr,
+                        error_msg.data());
+    printf("%s\n", error_msg.data());
+    // throw std::runtime_error("shader compile error");
+  }
 
-	glDetachShader(_program_id, vert_id);
-	glDetachShader(_program_id, frag_id);
+  glDetachShader(_program_id, vert_id);
+  glDetachShader(_program_id, frag_id);
 
-	glDeleteShader(vert_id);
-	glDeleteShader(frag_id);
+  glDeleteShader(vert_id);
+  glDeleteShader(frag_id);
 }
 
 static constexpr float float_threshold = 0.000001;
@@ -100,13 +104,14 @@ Model::Model(std::string_view filename) {
   _is_loaded = true;
 }
 
-void Model::load_sphere(std::vector<Vertex> &vertexes, std::vector<uint32_t> &index) {
-}
+void Model::load_sphere(std::vector<Vertex> &vertexes,
+                        std::vector<uint32_t> &index) {}
 
-void Model::load_cube(std::vector<Vertex> &vertexes, std::vector<uint32_t> &index) {
-}
+void Model::load_cube(std::vector<Vertex> &vertexes,
+                      std::vector<uint32_t> &index) {}
 
-void Model::load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes) {
+void Model::load_plane(std::vector<Vertex> &vertexes,
+                       std::vector<uint32_t> &indexes) {
   vertexes.resize(4);
 
   for (auto &vert : vertexes) {
@@ -116,10 +121,10 @@ void Model::load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &ind
 
   float scale = 1;
 
-  vertexes[0].position = {scale,  0, scale };
-  vertexes[1].position = {scale,  0, -scale};
+  vertexes[0].position = {scale, 0, scale};
+  vertexes[1].position = {scale, 0, -scale};
   vertexes[2].position = {-scale, 0, -scale};
-  vertexes[3].position = {-scale, 0, scale };
+  vertexes[3].position = {-scale, 0, scale};
 
   vertexes[0].texture_coords = {1, 1};
   vertexes[1].texture_coords = {1, 0};
@@ -129,7 +134,8 @@ void Model::load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &ind
   indexes = {0, 1, 2, 2, 3, 0};
 }
 
-Model::Model(GeometryType geom_type, const std::string &shader_path) : _type(geom_type) {
+Model::Model(GeometryType geom_type, const std::string &shader_path)
+    : _type(geom_type) {
   default_position();
   _is_loaded = false;
 
@@ -137,28 +143,30 @@ Model::Model(GeometryType geom_type, const std::string &shader_path) : _type(geo
   std::vector<uint32_t> indexes;
 
   switch (geom_type) {
-    case GeometryType::Cube:
-      load_cube(vertexes, indexes);
-      break;
-    case GeometryType::Sphere:
-      load_sphere(vertexes, indexes);
-      break;
-    case GeometryType::Plane:
-      load_plane(vertexes, indexes);
-      break;
-    default:
-      throw std::runtime_error("invalid GeometryType enum value");
+  case GeometryType::Cube:
+    load_cube(vertexes, indexes);
+    break;
+  case GeometryType::Sphere:
+    load_sphere(vertexes, indexes);
+    break;
+  case GeometryType::Plane:
+    load_plane(vertexes, indexes);
+    break;
+  default:
+    throw std::runtime_error("invalid GeometryType enum value");
   }
 
   load_to_gpu(vertexes, indexes);
   _indexes_number = indexes.size();
 
   load_shader(shader_path);
+  load_texture("../datasets/textures/image_2024-08-04_00-57-12.png");
 
   calculate_bound_box(vertexes);
 }
 
-void Model::load_to_gpu(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes) {
+void Model::load_to_gpu(std::vector<Vertex> &vertexes,
+                        std::vector<uint32_t> &indexes) {
   // create and bind vertex array
   glGenVertexArrays(1, &_vertex_array);
   glBindVertexArray(_vertex_array);
@@ -168,7 +176,8 @@ void Model::load_to_gpu(std::vector<Vertex> &vertexes, std::vector<uint32_t> &in
   glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
 
   // fill buffer
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexes.size(), vertexes.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexes.size(),
+               vertexes.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer); // hz nado li
 
@@ -198,12 +207,13 @@ void Model::load_to_gpu(std::vector<Vertex> &vertexes, std::vector<uint32_t> &in
 
   // fill data
   uint32_t index_buffer_size = sizeof(uint32_t) * indexes.size();
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size, indexes.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size, indexes.data(),
+               GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index_buffer); // hz nado li
 }
 
-const Vec3 & Model::scale(const Vec3 &scale) {
+const Vec3 &Model::scale(const Vec3 &scale) {
   _scale.x *= abs(scale.x) < float_threshold ? 1 : scale.x;
   _scale.y *= abs(scale.y) < float_threshold ? 1 : scale.y;
   _scale.z *= abs(scale.z) < float_threshold ? 1 : scale.z;
@@ -211,7 +221,7 @@ const Vec3 & Model::scale(const Vec3 &scale) {
   return _scale;
 }
 
-const Rotation & Model::rotate(const Vec3 &axis, float angle) {
+const Rotation &Model::rotate(const Vec3 &axis, float angle) {
   if (abs(angle) < float_threshold) {
     return _rotate;
   }
@@ -222,7 +232,7 @@ const Rotation & Model::rotate(const Vec3 &axis, float angle) {
   return _rotate;
 }
 
-const Vec3 & Model::translate(const Vec3 &translate) {
+const Vec3 &Model::translate(const Vec3 &translate) {
   _translate.x += translate.x;
   _translate.y += translate.y;
   _translate.z += translate.z;
@@ -255,11 +265,29 @@ void Model::calculate_bound_box(const std::vector<Vertex> &vertexes) {
   }
 }
 
-const Model::BoundBox & Model::get_bound_box() {
-  return _bound_box;
-}
+const Model::BoundBox &Model::get_bound_box() { return _bound_box; }
 
-void Model::load_texture(std::string_view filename) {}
+void Model::load_texture(std::string_view filename) {
+  glGenTextures(1, &_texture);
+  glBindTexture(GL_TEXTURE_2D, _texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+  //                 GL_LINEAR_MIPMAP_LINEAR);
+  // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  //  load and generate the texture
+  int width, height, nrChannels;
+  unsigned char *data =
+      stbi_load(filename.data(), &width, &height, &nrChannels, 0);
+  if (data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
+                 GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  } else {
+    std::cout << "Failed to load texture" << std::endl;
+  }
+  stbi_image_free(data);
+}
 
 void Model::draw() {
   glUseProgram(_program_id);
@@ -278,6 +306,7 @@ void Model::draw() {
 
   glBindVertexArray(_vertex_array);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _index_buffer);
+  glBindTexture(GL_TEXTURE_2D, _texture);
   glDrawElements(GL_TRIANGLES, _indexes_number, GL_UNSIGNED_INT, nullptr);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
@@ -298,7 +327,7 @@ Model::Model(Model &&other) {
   _is_loaded = other._is_loaded;
 }
 
-Model & Model::operator=(Model &&other) {
+Model &Model::operator=(Model &&other) {
   if (this == &other) {
     return *this;
   }
@@ -343,10 +372,11 @@ Model::~Model() {
   }
 
   const uint32_t shaders_size = 2;
-  std::array<uint32_t, shaders_size> shaders {};
+  std::array<uint32_t, shaders_size> shaders{};
   int real_shader_number;
 
-  glGetAttachedShaders(_program_id, shaders_size, &real_shader_number, shaders.data());
+  glGetAttachedShaders(_program_id, shaders_size, &real_shader_number,
+                       shaders.data());
   assert(shaders_size == real_shader_number);
 
   for (uint32_t shader : shaders) {

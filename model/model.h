@@ -51,6 +51,10 @@ private:
 
   uint32_t _program_id {};
 
+  uint32_t _texture {};
+  uint32_t _texture_height {};
+  uint32_t _texture_widht {};
+
 public:
   Model(std::string_view filename);
   Model(GeometryType geom_type, const std::string &shader_path = "default");
