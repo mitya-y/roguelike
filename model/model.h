@@ -1,13 +1,16 @@
 #pragma once
 
-#include <vector>
-#include <optional>
-#include <vector>
-#include <string>
 #include <cstdint>
+#include <optional>
+#include <string>
+#include <vector>
 
-struct Vec3 { float x, y, z; };
-struct Vec2 { float x, y; };
+struct Vec3 {
+  float x, y, z;
+};
+struct Vec2 {
+  float x, y;
+};
 struct Rotation {
   Vec3 axis;
   float angle;
@@ -15,11 +18,7 @@ struct Rotation {
 
 class Model {
 public:
-  enum struct GeometryType {
-    Cube,
-    Sphere,
-    Plane
-  };
+  enum struct GeometryType { Cube, Sphere, Plane };
 
   struct BoundBox {
     Vec3 min, max;
@@ -34,56 +33,60 @@ private:
   };
 
 private:
-  BoundBox _bound_box {};
+  BoundBox _bound_box{};
 
-  Rotation _rotate {1, 1, 1};
-  Vec3 _translate {};
-  Vec3 _scale {};
+  Rotation _rotate{1, 1, 1};
+  Vec3 _translate{};
+  Vec3 _scale{};
 
-  GeometryType _type {};
+  GeometryType _type{};
   bool _is_loaded = false;
   uint32_t _indexes_number = 0;
 
   // opengl stuff
-  uint32_t _vertex_array {};
-  uint32_t _vertex_buffer {};
-  uint32_t _index_buffer {};
+  uint32_t _vertex_array{};
+  uint32_t _vertex_buffer{};
+  uint32_t _index_buffer{};
 
-  uint32_t _program_id {};
+  uint32_t _program_id{};
 
-  uint32_t _texture {};
-  uint32_t _texture_height {};
-  uint32_t _texture_widht {};
+  uint32_t _texture{};
+  int _texture_height{};
+  int _texture_widht{};
 
 public:
   Model(std::string_view filename);
   Model(GeometryType geom_type, const std::string &shader_path = "default");
 
   Model(const Model &other) = delete;
-  Model & operator=(const Model &other) = delete;
+  Model &operator=(const Model &other) = delete;
 
   Model(Model &&other);
-  Model & operator=(Model &&other);
+  Model &operator=(Model &&other);
 
   ~Model();
 
 private:
   void calculate_bound_box(const std::vector<Vertex> &vertexes);
 
-  void load_sphere(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
-  void load_cube(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
-  void load_plane(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
+  void load_sphere(std::vector<Vertex> &vertexes,
+                   std::vector<uint32_t> &indexes, int W, int H);
+  void load_cube(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes,
+                 const Vec3 &point0, const Vec3 &point1);
+  void load_plane(std::vector<Vertex> &vertexes,
+                  std::vector<uint32_t> &indexes);
 
-  void load_to_gpu(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
+  void load_to_gpu(std::vector<Vertex> &vertexes,
+                   std::vector<uint32_t> &indexes);
   void load_shader(const std::string &shader_name);
 
 public:
-  const Vec3 & scale(const Vec3 &scale = {1, 1, 1});
-  const Rotation & rotate(const Vec3 &axis = {}, float angle = 0);
-  const Vec3 & translate(const Vec3 &translate = {});
+  const Vec3 &scale(const Vec3 &scale = {1, 1, 1});
+  const Rotation &rotate(const Vec3 &axis = {}, float angle = 0);
+  const Vec3 &translate(const Vec3 &translate = {});
   void default_position();
 
-  const BoundBox & get_bound_box();
+  const BoundBox &get_bound_box();
 
   void load_texture(std::string_view filename);
 

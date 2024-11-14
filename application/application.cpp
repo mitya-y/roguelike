@@ -1,12 +1,12 @@
+#include <fstream>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
-#include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 #include <GL/gl.h>
+#include <GLFW/glfw3.h>
 
 #include "application.hpp"
 
@@ -19,7 +19,8 @@ Application::Application() {
 
 Application::~Application() {}
 
-void Application::window_size_callback(GLFWwindow* window, int width, int height) {
+void Application::window_size_callback(GLFWwindow *window, int width,
+                                       int height) {
   glViewport(0, 0, width, height);
 }
 
@@ -41,7 +42,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     exit(0);
   }
   glClearColor(0.30, 0.47, 0.8, 1);
-  //glClearColor(0.0, 0.0, 0.0, 0.0);
+  // glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -54,7 +55,8 @@ void Application::start(std::unique_ptr<Scene> scene) {
   /*glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
   glDebugMessageCallback(glDebugOutput, NULL);
-  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);*/
+  glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL,
+  GL_TRUE);*/
 
   int width, height;
   glfwGetWindowSize(_window, &width, &height);
@@ -70,11 +72,12 @@ void Application::start(std::unique_ptr<Scene> scene) {
 
   _projection = glm::frustum(-rx / 2, rx / 2, -ry / 2, ry / 2, 0.1f, 100.0f);
   _camera_position = glm::vec3(2.3, 1.5, 0);
-  _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  _view =
+      glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
 
-  //set Camera
-  // wglSwapIntervalEXT - enable vertical sync
+  // set Camera
+  //  wglSwapIntervalEXT - enable vertical sync
 
   while (not glfwWindowShouldClose(_window)) {
     // render scene
@@ -105,22 +108,29 @@ void Application::render() {
   float time = timer();
   float x = cos(time), y = sin(time);
   _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
-  _view = glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+  _view =
+      glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
   // Render all units
 
-  static Model model(Model::GeometryType::Plane);
-  model.draw();
+  static Model pln(Model::GeometryType::Plane);
+  static Model sph(Model::GeometryType::Sphere);
+  static Model cub(Model::GeometryType::Cube);
+  //pln.draw();
+  //sph.draw();
+  cub.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();
 }
 
-Scene & Application::get_scene() { return *scene; }
+Scene &Application::get_scene() { return *scene; }
 
-const glm::highp_mat4 & Application::view_projection() { return _view_projection; }
+const glm::highp_mat4 &Application::view_projection() {
+  return _view_projection;
+}
 
-const glm::vec3 & Application::camera_position() { return _camera_position; }
+const glm::vec3 &Application::camera_position() { return _camera_position; }
 
 void Application::set_scene(std::unique_ptr<Scene> scene) {}
 
