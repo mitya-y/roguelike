@@ -109,17 +109,22 @@ void Model::load_sphere(std::vector<Vertex> &vertexes,
   vertexes.resize(W * H);
   index.resize((H - 1) * (W * 2 + 1) - 1);
 
-  double pi = 3.14159265359;
+  float pi = 3.14159265359;
   int i, j, k;
-  double theta = 0, phi;
+  float theta = 0, phi;
   for (i = 0; i < H; i++, theta += pi / (H - 1))
     for (j = 0, phi = 0; j < W; j++, phi += 2 * pi / (W - 1)) {
-      vertexes[i * W + j].normal = {sin(theta) * sin(phi), cos(theta),
-                                    sin(theta) * cos(phi)};
-      vertexes[i * W + j].position = {vertexes[i * W + j].normal.x,
-                                      vertexes[i * W + j].normal.y,
-                                      vertexes[i * W + j].normal.z};
-      vertexes[i * W + j].texture_coords = {j / (W - 1.0), i / (H - 1.0)};
+      vertexes[i * W + j].normal = {
+        sin(theta) * sin(phi),
+        cos(theta),
+        sin(theta) * cos(phi)
+      };
+      vertexes[i * W + j].position = {
+        vertexes[i * W + j].normal.x,
+        vertexes[i * W + j].normal.y,
+        vertexes[i * W + j].normal.z
+      };
+      vertexes[i * W + j].texture_coords = {j / (W - 1.0f), i / (H - 1.0f)};
       vertexes[i * W + j].color = {1, 1, 1};
     }
 

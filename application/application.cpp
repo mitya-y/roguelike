@@ -41,8 +41,8 @@ void Application::start(std::unique_ptr<Scene> scene) {
               << std::endl;
     exit(0);
   }
-  glClearColor(0.30, 0.47, 0.8, 1);
-  // glClearColor(0.0, 0.0, 0.0, 0.0);
+  // glClearColor(0.30, 0.47, 0.8, 1);
+  glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -116,9 +116,9 @@ void Application::render() {
   static Model pln(Model::GeometryType::Plane);
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
-  //pln.draw();
-  //sph.draw();
-  cub.draw();
+  pln.draw();
+  // sph.draw();
+  // cub.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();
