@@ -1,6 +1,9 @@
-#include "Scene.h"
+#pragma once
+
+#include "scene.h"
+
 class Application {
-public: 
+public:
 	static Application & get();
 	Scene * get_current_scene();
 
