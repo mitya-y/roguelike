@@ -25,6 +25,7 @@ public:
   };
 
 private:
+public:
   struct Vertex {
     Vec3 position;
     Vec3 normal;
@@ -32,30 +33,49 @@ private:
     Vec3 color;
   };
 
+  class ModelData {
+    // opengl stuff
+    uint32_t _vertex_array {};
+    uint32_t _vertex_buffer {};
+    uint32_t _index_buffer {};
+    uint32_t _indexes_number = 0;
+
+    uint32_t _texture {};
+    int _texture_height {};
+    int _texture_widht {};
+
+  public:
+    void load_texture(std::string_view filename);
+
+    void draw();
+
+    ModelData(std::vector<Vertex> &vertexes,
+              std::vector<uint32_t> &indexes);
+    ~ModelData();
+
+    ModelData(const ModelData &other) = delete;
+    ModelData &operator=(const ModelData &other) = delete;
+
+    ModelData(ModelData &&other);
+    ModelData &operator=(ModelData &&other);
+  };
+
 private:
-  BoundBox _bound_box{};
+  std::vector<ModelData> _model_datas;
 
-  Rotation _rotate{1, 1, 1};
-  Vec3 _translate{};
-  Vec3 _scale{};
+  BoundBox _bound_box {};
 
-  GeometryType _type{};
+  Rotation _rotate {1, 1, 1};
+  Vec3 _translate {};
+  Vec3 _scale {};
+
+  GeometryType _type {};
   bool _is_loaded = false;
-  uint32_t _indexes_number = 0;
 
-  // opengl stuff
-  uint32_t _vertex_array{};
-  uint32_t _vertex_buffer{};
-  uint32_t _index_buffer{};
-
-  uint32_t _program_id{};
-
-  uint32_t _texture{};
-  int _texture_height{};
-  int _texture_widht{};
+  uint32_t _program_id {};
 
 public:
-  Model(std::string_view filename);
+  Model(std::string_view path, std::string_view filename);
   Model(GeometryType geom_type, const std::string &shader_path = "default");
 
   Model(const Model &other) = delete;
@@ -76,19 +96,15 @@ private:
   void load_plane(std::vector<Vertex> &vertexes,
                   std::vector<uint32_t> &indexes);
 
-  void load_to_gpu(std::vector<Vertex> &vertexes,
-                   std::vector<uint32_t> &indexes);
   void load_shader(const std::string &shader_name);
 
 public:
-  const Vec3 &scale(const Vec3 &scale = {1, 1, 1});
-  const Rotation &rotate(const Vec3 &axis = {}, float angle = 0);
-  const Vec3 &translate(const Vec3 &translate = {});
+  const Vec3 & scale(const Vec3 &scale = {1, 1, 1});
+  const Rotation & rotate(const Vec3 &axis = {}, float angle = 0);
+  const Vec3 & translate(const Vec3 &translate = {});
   void default_position();
 
-  const BoundBox &get_bound_box();
-
-  void load_texture(std::string_view filename);
+  const BoundBox & get_bound_box();
 
   void draw();
 };

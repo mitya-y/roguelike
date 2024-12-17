@@ -1,6 +1,6 @@
 #version 410
 
-out vec3 color;
+out vec4 out_color;
 
 in vec3 frag_pos;
 in vec3 frag_normal;
@@ -16,6 +16,7 @@ vec3 Shade() {
   float y = cos(Time);
 
   vec3 LightDir = vec3(x, 1, y);
+  LightDir = vec3(1, 1, 1);
   vec3 LightColor = vec3(1);
   vec3 Kd = frag_color;
   vec3 Ks = vec3(0.2);
@@ -39,8 +40,10 @@ vec3 Shade() {
 
 
 void main() {
-  // color = vec3(1, 0, 0);
+  vec3 color = vec3(0);
   color = Shade();
-  color *= texture(Texture, frag_tex_coord).xyz;
-  // color = vec3(0, 1, 0);
+  // color *= texture(Texture, frag_tex_coord).xyz;
+  color = frag_color;
+  out_color = vec4(color, 1);
+  out_color = vec4(1, 1, 1, 0.5);
 }
