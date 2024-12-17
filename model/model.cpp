@@ -12,6 +12,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include "OBJ-Loader/Source/OBJ_Loader.h"
+
 #include "application.hpp"
 #include "model.h"
 
@@ -102,6 +104,53 @@ static constexpr float float_threshold = 0.000001;
 Model::Model(std::string_view filename) {
   default_position();
   _is_loaded = true;
+
+	objl::Loader loader;
+  std::string full_filename = std::string(ASSETS_DIRECTORY) + '/' + filename.data();
+  if (!loader.LoadFile(full_filename)) {
+    throw std::runtime_error("file not exists");
+  }
+
+  // for (auto &mesh : loader.LoadedMeshes) {
+  //   std::cout << "Mesh " << ": " << mesh.MeshName << "\n";
+  //   const auto &mesh_verts = mesh.Verticies;
+  //   break;
+  // }
+
+  auto &mesh = loader.LoadedMeshes.front();
+
+  const auto &mesh_verts = mesh.Vertices;
+  std::vector<Vertex> vertexes(mesh_verts.size());
+  for (int i = 0; i < mesh_verts.size(); i++) {
+    vertexes[i].position.x = mesh_verts[i].Position.X;
+    vertexes[i].position.y = mesh_verts[i].Position.Y;
+    vertexes[i].position.z = mesh_verts[i].Position.Z;
+
+    vertexes[i].normal.x = mesh_verts[i].Normal.X;
+    vertexes[i].normal.y = mesh_verts[i].Normal.Y;
+    vertexes[i].normal.z = mesh_verts[i].Normal.Z;
+
+    vertexes[i].texture_coords.x = mesh_verts[i].TextureCoordinate.X;
+    vertexes[i].texture_coords.y = mesh_verts[i].TextureCoordinate.Y;
+
+    vertexes[i].color = {1, 1, 1};
+  }
+
+  const auto &mesh_indicies = mesh.Indices;
+  std::vector<uint32_t> indexes(mesh_indicies.size());
+  for (int i = 0; i < mesh_verts.size(); i++) {
+    indexes[i] = mesh_indicies[i];
+  }
+
+  load_to_gpu(vertexes, indexes);
+  _indexes_number = indexes.size();
+
+  auto shader_path = "default";
+  load_shader(shader_path);
+  // load_texture(ASSETS_DIRECTORY "/textures/image_2024-08-04_00-57-12.png");
+
+  calculate_bound_box(vertexes);
+
 }
 
 void Model::load_sphere(std::vector<Vertex> &vertexes,

@@ -107,19 +107,30 @@ void Application::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float time = timer();
-  float x = cos(time), y = sin(time);
-  _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
+  float x = cos(time) * 2, y = sin(time) * 2;
+  x = y = 1;
+  // _camera_position = glm::vec3(2.0 * x, 4.0, 2.0 * y);
+  _camera_position = glm::vec3(50, 100, 100);
+  glm::vec3 at = glm::vec3(0.2, 2, 0.2);
+
+
+  _camera_position = glm::vec3(0, 100, 0);
+  at = glm::vec3(0, 40, -100);
+
   _view =
-      glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+      glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
   // Render all units
 
   static Model pln(Model::GeometryType::Plane);
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
+  static Model model("table/table.obj");
+  // static Model model("box_stack.obj");
   // pln.draw();
   // sph.draw();
-  cub.draw();
+  // pln.draw();
+  model.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();
