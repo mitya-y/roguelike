@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <map>
 
+#include "inventory.h"
 #include "application.hpp"
 
 #define txt "scene.txt";
@@ -19,15 +21,25 @@ public:
   };
 };
 
+
+
 class Unit {
 public:
   virtual void draw();
   virtual void update();
+
   virtual char* serealize();
   virtual Unit deserealize();
 
-  Unit(int x = 0, int y = 0);
-  virtual ~Unit();
+	Unit(glm::vec2 pos) :
+    _pos(pos) {};
+	virtual ~Unit();
+
+  glm::vec2 get_positions() {
+    return _pos;
+  }
+private:
+	glm::vec2 _pos;
 };
 
 class Scene {
@@ -63,26 +75,36 @@ public:
   }
 };
 
-class Person : Unit {
+class Person : public Unit {
 protected:
-  glm::vec2 _positions;
-  std::vector<std::string> _phrases;
   Tree _tree_of_phrases;
-
 public:
-  virtual glm::vec2 get_positions() = 0;
-  virtual void talk(Person* talker) = 0;
+  virtual void talk() = 0;
 
-  Person(int x = 0, int y = 0);
-  ~Person();
+  Person(glm::vec2 pos, Tree tree_of_phrases) :
+    Unit(pos), _tree_of_phrases(tree_of_phrases) {};
+  ~Person() = default;
 };
 
 class Object : Unit {
 private:
-  glm::vec2 positions;
+  std::map<std::string, Thing> _container;
 public:
-  virtual glm::vec2 get_positions() = 0;
+	bool has_thing() {
+		return _container.size() > 0 ? true : false;
+	}
+  
+  Thing take_thing(std::string name) {
+    auto iter = _container.find(name);
+    if (iter == _container.end()) {
+      throw std::runtime_error("incorrect name to take");
+    }
+    Thing tmp = iter->second;
+    _container.erase(name);
+    return tmp;
+  }
 
-  Object(int x = 0, int y = 0);
-  ~Object();
+	Object(glm::vec2 pos, std::map<std::string, Thing> container) :
+    Unit(pos), _container(container) {};
+	~Object() = default;
 };

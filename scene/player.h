@@ -1,5 +1,5 @@
 #pragma once
-
+#include "inventory.h"
 #include "scene.h"
 
 class Application {
@@ -10,23 +10,25 @@ public:
 	bool key_pressed(char key) { return false; }
 };
 
-struct Vec3 {
-	int x = 0;
-	int y = 0;
-	int z = 0;
-};
-
-class Player : public Person {
+class Player : Unit {
 public:
-	Player();
+	Player(glm::vec2 pos) :
+		Unit(pos), _inventory(20) {};
 
-	void talk(Person* talker) override {}
+	~Player() = default;
+
+	void pick_an_item() {
+
+	}
+
+	void talk(Person* talker) {}
 
 	void draw() override {}
 
 	void update() override {
 		auto &app = Application::get();
 		auto* scene = app.get_current_scene();
+		glm::vec2 positions = this->get_positions();
 
 		for (auto &&[name, unit] : *scene) {
 			Person *pers = dynamic_cast<Person *>(unit.get());
@@ -34,12 +36,12 @@ public:
 				continue;
 			}
 			if (check_next(pers->get_positions())) {
-				pers->talk(this);
+				pers->talk();
 			}
 		}
 
 		if (Application::get().key_pressed('W')) {
-			if (positions.x < scene->get_bound().y - 1) {
+			if (positions.y < scene->get_bound().y - 1) {
 				positions.y++;
 			}
 		}
@@ -51,7 +53,7 @@ public:
 		}
 
 		if (Application::get().key_pressed('S')) {
-			if (positions.x > 1) {
+			if (positions.y > 1) {
 				positions.y--;
 			}
 		}
@@ -64,5 +66,6 @@ public:
 	}
 
 private:
-	bool check_next(Vec2 position) { return false; }
+	Inventory _inventory;
+	bool check_next(glm::vec2 position) { return false; }
 };
