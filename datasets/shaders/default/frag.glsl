@@ -9,6 +9,7 @@ in vec3 frag_color;
 
 uniform vec3 CameraPos;
 uniform float Time;
+uniform sampler2D Texture;
 
 vec3 Shade() {
   float x = sin(Time);
@@ -40,5 +41,6 @@ vec3 Shade() {
 void main() {
   // color = vec3(1, 0, 0);
   color = Shade();
+  color *= texture(Texture, frag_tex_coord).xyz;
   // color = vec3(0, 1, 0);
 }
