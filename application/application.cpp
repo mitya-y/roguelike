@@ -9,6 +9,7 @@
 #include <GLFW/glfw3.h>
 
 #include "application.hpp"
+#include "scene.h"
 
 Application::Application() {
   glfwInit();
@@ -116,9 +117,9 @@ void Application::render() {
   static Model pln(Model::GeometryType::Plane);
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
-  pln.draw();
+  // pln.draw();
   // sph.draw();
-  // cub.draw();
+  cub.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();

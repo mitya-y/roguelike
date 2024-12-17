@@ -6,87 +6,83 @@
 #include <string>
 #include <vector>
 
+#include "application.hpp"
+
 #define txt "scene.txt";
 
 class Tree {
 public:
-	struct Node {
-  		std::string phrase;
-  		struct tnode *left;
-  		struct tnode *right;
-	};
+  struct Node {
+    std::string phrase;
+    struct tnode *left;
+    struct tnode *right;
+  };
 };
 
 class Unit {
 public:
-	virtual void draw();
-	virtual void update();
-	virtual char* serealize();
-	virtual Unit deserealize();
+  virtual void draw();
+  virtual void update();
+  virtual char* serealize();
+  virtual Unit deserealize();
 
-	Unit(int x = 0, int y = 0);
-	virtual ~Unit();
-
-};
-
-struct Vec2 {
-	int x = 0;
-	int y = 0;
+  Unit(int x = 0, int y = 0);
+  virtual ~Unit();
 };
 
 class Scene {
-private: 
-	char* data; //мб там хранить все в виде эффективного массива 
-									//плюс туда (де)сереализация
+private:
+  using UnitContainer = std::map<std::string, std::shared_ptr<Unit>>;
+  using UnitIter = UnitContainer::iterator;
 
-	using UnitContainer = std::map<std::string, std::shared_ptr<Unit>>;
-	using UnitIter = UnitContainer::iterator;
-	UnitContainer containing_units;
-	int width = 100;
-	int heigh = 100;
+  UnitContainer _units;
+
+  int _width = 100;
+  int _heigh = 100;
+
 public:
-	Scene(std::string sw);
-	~Scene();
+  Scene(std::string_view sw);
+  ~Scene();
 
-	void save_to_file();
-	void draw();
-	void update();
-	std::string serealize();
+  void save_to_file(std::string_view filename);
+  void draw();
+  void update();
 
-	template<typename UnitType, typename ...Args>
-		std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args);
+  template<typename UnitType, typename ...Args>
+  std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args);
 
-		Vec2 get_bound() { return {0, 0}; }
-		void delete_unit(std::string name);
+  void delete_unit(std::string name);
 
-		UnitIter begin() {
-			return containing_units.begin();
-		}
-		std::map<std::string, std::shared_ptr<Unit>>::iterator end() {
-			return containing_units.end();
-		}
+  glm::vec2 get_bound() { return {0, 0}; }
 
+  UnitIter begin() noexcept {
+    return _units.begin();
+  }
+  UnitIter end() noexcept {
+    return _units.end();
+  }
 };
 
 class Person : Unit {
 protected:
-	Vec2 positions;
-	std::vector<std::string> phrases;
-	Tree tree_of_phrases;
-public:
-	virtual Vec2 get_positions();
-	virtual void talk(Person* talker);
+  glm::vec2 _positions;
+  std::vector<std::string> _phrases;
+  Tree _tree_of_phrases;
 
-	Person(int x = 0, int y = 0);
-	~Person();
+public:
+  virtual glm::vec2 get_positions() = 0;
+  virtual void talk(Person* talker) = 0;
+
+  Person(int x = 0, int y = 0);
+  ~Person();
 };
 
 class Object : Unit {
 private:
-	Vec2 positions;
+  glm::vec2 positions;
 public:
-	virtual Vec2 get_positions();
+  virtual glm::vec2 get_positions() = 0;
 
-	Object(int x = 0, int y = 0);
-	~Object();
+  Object(int x = 0, int y = 0);
+  ~Object();
 };
