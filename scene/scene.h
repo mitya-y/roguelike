@@ -104,6 +104,17 @@ public:
     return tmp;
   }
 
+  std::string view_things() {
+    std::string s = "";
+
+    for(auto &item : _container) {
+      s += item.first;
+      s += ";";
+    }
+  
+    return s;
+  }
+
 	Object(glm::vec2 pos, std::map<std::string, Thing> container) :
     Unit(pos), _container(container) {};
 	~Object() = default;
