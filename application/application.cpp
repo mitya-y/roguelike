@@ -84,7 +84,6 @@ void Application::start(std::unique_ptr<Scene> scene) {
   // set Camera
   //  wglSwapIntervalEXT - enable vertical sync
 
-  std::cout << __LINE__ << std::endl;
   _scene = std::move(scene);
   //scene->create_unit<field>("field");
 
@@ -120,11 +119,11 @@ void Application::render() {
   _camera_position = glm::vec3(x, 3.0, y);
   glm::vec3 at = glm::vec3(0.2, 2, 0.2);
 
-  _camera_position = glm::vec3(300);
+ // _camera_position = glm::vec3(300);
   // _camera_position = glm::vec3(3);
   at = glm::vec3(0, 0, 0);
 
-  _camera_position = glm::vec3(0, -300, 100);
+  //_camera_position = glm::vec3(0, -300, 100);
 
   _view =
       glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
@@ -135,6 +134,7 @@ void Application::render() {
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
   static Model model("models/chair", "chair.obj");
+
   _scene->update();
   _scene->draw();
 

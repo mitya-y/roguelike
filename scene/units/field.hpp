@@ -27,7 +27,6 @@ public:
 
     std::string input;
     while (file >> input) {
-      std::cout << input << std::endl;
       if (input == "q") {
         break;
       }

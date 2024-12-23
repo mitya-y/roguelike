@@ -41,11 +41,8 @@ public:
 
   template <typename UnitType, typename... Args>
   std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args) {
-    std::cout << __LINE__ << std::endl;
     auto unit = std::make_shared<UnitType>(args...);
-    std::cout << __LINE__ << std::endl;
     _units[name] = unit;
-    std::cout << "units size : " << _units.size() << std::endl;
     return unit;
   }
 

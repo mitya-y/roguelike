@@ -19,7 +19,6 @@ void Scene::draw() {
 }
 
 void Scene::update() {
-  std::cout << _units.size() << std::endl;
   for (auto &[_, unit] : _units) {
     unit->update();
   }
