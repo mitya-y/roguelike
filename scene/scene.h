@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <map>
 #include <memory>
 #include <stdio.h>
@@ -7,40 +8,10 @@
 #include <vector>
 #include <map>
 
-#include "inventory.h"
-#include "application.hpp"
+#include "base_unit.hpp"
+#include <glm/glm.hpp>
 
 #define txt "scene.txt";
-
-class Tree {
-public:
-  struct Node {
-    std::string phrase;
-    struct tnode *left;
-    struct tnode *right;
-  };
-};
-
-
-
-class Unit {
-public:
-  virtual void draw();
-  virtual void update();
-
-  virtual char* serealize();
-  virtual Unit deserealize();
-
-	Unit(glm::vec2 pos) :
-    _pos(pos) {};
-	virtual ~Unit();
-
-  glm::vec2 get_positions() {
-    return _pos;
-  }
-private:
-	glm::vec2 _pos;
-};
 
 class Scene {
 private:
@@ -54,57 +25,34 @@ private:
 
 public:
   Scene(std::string_view sw);
+  /*
+    Scene() {}
+    Scene(const Scene &other) = default;
+    Scene &operator=(const Scene &other) = default;
+    Scene(Scene &&other) = default;
+    Scene &operator=(Scene &&other) = default;
+  */
+
   ~Scene();
 
   void save_to_file(std::string_view filename);
   void draw();
   void update();
 
-  template<typename UnitType, typename ...Args>
-  std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args);
+  template <typename UnitType, typename... Args>
+  std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args) {
+    std::cout << __LINE__ << std::endl;
+    auto unit = std::make_shared<UnitType>(args...);
+    std::cout << __LINE__ << std::endl;
+    _units[name] = unit;
+    std::cout << "units size : " << _units.size() << std::endl;
+    return unit;
+  }
 
   void delete_unit(std::string name);
 
   glm::vec2 get_bound() { return {0, 0}; }
 
-  UnitIter begin() noexcept {
-    return _units.begin();
-  }
-  UnitIter end() noexcept {
-    return _units.end();
-  }
-};
-
-class Person : public Unit {
-protected:
-  Tree _tree_of_phrases;
-public:
-  virtual void talk() = 0;
-
-  Person(glm::vec2 pos, Tree tree_of_phrases) :
-    Unit(pos), _tree_of_phrases(tree_of_phrases) {};
-  ~Person() = default;
-};
-
-class Object : Unit {
-private:
-  std::map<std::string, Thing> _container;
-public:
-	bool has_thing() {
-		return _container.size() > 0 ? true : false;
-	}
-  
-  Thing take_thing(std::string name) {
-    auto iter = _container.find(name);
-    if (iter == _container.end()) {
-      throw std::runtime_error("incorrect name to take");
-    }
-    Thing tmp = iter->second;
-    _container.erase(name);
-    return tmp;
-  }
-
-	Object(glm::vec2 pos, std::map<std::string, Thing> container) :
-    Unit(pos), _container(container) {};
-	~Object() = default;
+  UnitIter begin() noexcept { return _units.begin(); }
+  UnitIter end() noexcept { return _units.end(); }
 };

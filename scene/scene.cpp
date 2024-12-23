@@ -1,9 +1,14 @@
+#include <iostream>
 #include <stdexcept>
 
 #include "scene.h"
 
-Scene::Scene(std::string_view sw) {}
-Scene::~Scene() {}
+Scene::Scene(std::string_view sw) {
+  std::cout << "scene constructor" << std::endl;
+}
+Scene::~Scene() {
+  std::cout << "scene distructor" << std::endl;
+}
 
 void Scene::save_to_file(std::string_view filename) {}
 
@@ -14,16 +19,10 @@ void Scene::draw() {
 }
 
 void Scene::update() {
+  std::cout << _units.size() << std::endl;
   for (auto &[_, unit] : _units) {
     unit->update();
   }
-}
-
-template<typename UnitType, typename ...Args>
-std::shared_ptr<UnitType> Scene::create_unit(std::string name, Args &&...args) {
-  auto unit = std::make_shared<UnitType>(args...);
-  _units[name] = unit;
-  return unit;
 }
 
 void Scene::delete_unit(std::string name) {
@@ -32,4 +31,3 @@ void Scene::delete_unit(std::string name) {
   }
   _units.erase(_units.find(name));
 }
-
