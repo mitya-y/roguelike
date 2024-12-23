@@ -71,7 +71,7 @@ void Application::start(std::unique_ptr<Scene> scene) {
     ry *= float(height) / float(width);
   }
 
-  _projection = glm::frustum(-rx / 2, rx / 2, -ry / 2, ry / 2, 0.1f, 100.0f);
+  _projection = glm::frustum(-rx / 2, rx / 2, -ry / 2, ry / 2, 0.1f, 1500.0f);
   _camera_position = glm::vec3(2.3, 1.5, 0);
   _view =
       glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
@@ -107,19 +107,32 @@ void Application::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float time = timer();
-  float x = cos(time), y = sin(time);
-  _camera_position = glm::vec3(2.0 * x, 3.0, 2.0 * y);
+  float dist = 3;
+  float x = cos(time) * dist, y = sin(time) * dist;
+  _camera_position = glm::vec3(x, 3.0, y);
+  glm::vec3 at = glm::vec3(0.2, 2, 0.2);
+
+  _camera_position = glm::vec3(300);
+  // _camera_position = glm::vec3(3);
+  at = glm::vec3(0, 0, 0);
+
+  _camera_position = glm::vec3(0, -300, 100);
+
   _view =
-      glm::lookAt(_camera_position, glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+      glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
   // Render all units
 
   static Model pln(Model::GeometryType::Plane);
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
+  static Model model("models/chair", "chair.obj");
+  // static Model model("models/table2", "table.obj");
+  // static Model model("models/table_chairs", "table.obj");
   // pln.draw();
   // sph.draw();
-  cub.draw();
+  // pln.draw();
+  model.draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();

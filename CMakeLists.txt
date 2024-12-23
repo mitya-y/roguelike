@@ -13,6 +13,8 @@ add_subdirectory(application)
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE scene)
 add_subdirectory(scene)
 
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE .)
+
 find_package(GLEW REQUIRED)
 find_package(OpenGL REQUIRED)
 
