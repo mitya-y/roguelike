@@ -102,8 +102,9 @@ Model::Model(std::string_view path, std::string_view filename) {
   default_position();
   _is_loaded = true;
 
-	objl::Loader loader;
-  std::string full_filename = std::string(ASSETS_DIRECTORY) + '/' + path.data() + '/' + filename.data();
+  objl::Loader loader;
+  std::string full_filename =
+      std::string(ASSETS_DIRECTORY) + '/' + path.data() + '/' + filename.data();
   if (!loader.LoadFile(full_filename)) {
     throw std::runtime_error("file not exists");
   }
@@ -132,7 +133,8 @@ Model::Model(std::string_view path, std::string_view filename) {
     if (tex_name.back() == '\r') {
       tex_name.resize(tex_name.size() - 1);
     }
-    auto full_name = std::string(ASSETS_DIRECTORY) + '/' + path.data() + '/' + tex_name;
+    auto full_name =
+        std::string(ASSETS_DIRECTORY) + '/' + path.data() + '/' + tex_name;
     _model_datas.back().load_texture(full_name);
   }
 
@@ -166,15 +168,15 @@ Model::Model(GeometryType geom_type, const std::string &shader_path)
   }
 
   _model_datas.emplace_back(vertexes, indexes);
-  _model_datas.back().load_texture(ASSETS_DIRECTORY "/textures/image_2024-08-04_00-57-12.png");
+  _model_datas.back().load_texture(ASSETS_DIRECTORY
+                                   "/textures/image_2024-08-04_00-57-12.png");
 
   load_shader(shader_path);
 
   calculate_bound_box(vertexes);
 }
 
-
-const Vec3 & Model::scale(const Vec3 &scale) {
+const Vec3 &Model::scale(const Vec3 &scale) {
   _scale.x *= abs(scale.x) < float_threshold ? 1 : scale.x;
   _scale.y *= abs(scale.y) < float_threshold ? 1 : scale.y;
   _scale.z *= abs(scale.z) < float_threshold ? 1 : scale.z;
@@ -182,7 +184,7 @@ const Vec3 & Model::scale(const Vec3 &scale) {
   return _scale;
 }
 
-const Rotation & Model::rotate(const Vec3 &axis, float angle) {
+const Rotation &Model::rotate(const Vec3 &axis, float angle) {
   if (abs(angle) < float_threshold) {
     return _rotate;
   }
@@ -193,7 +195,7 @@ const Rotation & Model::rotate(const Vec3 &axis, float angle) {
   return _rotate;
 }
 
-const Vec3 & Model::translate(const Vec3 &translate) {
+const Vec3 &Model::translate(const Vec3 &translate) {
   _translate.x += translate.x;
   _translate.y += translate.y;
   _translate.z += translate.z;
@@ -241,7 +243,7 @@ Model::Model(Model &&other) {
   _model_datas = std::move(other._model_datas);
 }
 
-Model & Model::operator=(Model &&other) {
+Model &Model::operator=(Model &&other) {
   if (this == &other) {
     return *this;
   }
@@ -300,6 +302,4 @@ Model::~Model() {
     }
   }
   glDeleteProgram(_program_id);
-
 }
-

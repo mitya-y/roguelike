@@ -16,16 +16,7 @@ Application::Application() {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-}
 
-Application::~Application() {}
-
-void Application::window_size_callback(GLFWwindow *window, int width,
-                                       int height) {
-  glViewport(0, 0, width, height);
-}
-
-void Application::start(std::unique_ptr<Scene> scene) {
   // set scene
   _window = glfwCreateWindow(800, 600, "roguelike", nullptr, nullptr);
   if (_window == nullptr) {
@@ -37,13 +28,15 @@ void Application::start(std::unique_ptr<Scene> scene) {
 
   // init OpenGL
   GLenum glewStatus = glewInit();
+
   if (glewStatus != GLEW_OK) {
     std::cerr << "Error initializing GLEW: " << glewGetErrorString(glewStatus)
               << std::endl;
     exit(0);
   }
-  // glClearColor(0.30, 0.47, 0.8, 1);
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+
+  glClearColor(0.30, 0.47, 0.8, 1);
+  //glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -58,6 +51,17 @@ void Application::start(std::unique_ptr<Scene> scene) {
   glDebugMessageCallback(glDebugOutput, NULL);
   glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL,
   GL_TRUE);*/
+
+}
+
+Application::~Application() {}
+
+void Application::window_size_callback(GLFWwindow *window, int width,
+                                       int height) {
+  glViewport(0, 0, width, height);
+}
+
+void Application::start(std::unique_ptr<Scene> scene) {
 
   int width, height;
   glfwGetWindowSize(_window, &width, &height);
@@ -79,6 +83,9 @@ void Application::start(std::unique_ptr<Scene> scene) {
 
   // set Camera
   //  wglSwapIntervalEXT - enable vertical sync
+
+  _scene = std::move(scene);
+  //scene->create_unit<field>("field");
 
   while (not glfwWindowShouldClose(_window)) {
     // render scene
@@ -112,11 +119,11 @@ void Application::render() {
   _camera_position = glm::vec3(x, 3.0, y);
   glm::vec3 at = glm::vec3(0.2, 2, 0.2);
 
-  _camera_position = glm::vec3(300);
+ // _camera_position = glm::vec3(300);
   // _camera_position = glm::vec3(3);
   at = glm::vec3(0, 0, 0);
 
-  _camera_position = glm::vec3(0, -300, 100);
+  //_camera_position = glm::vec3(0, -300, 100);
 
   _view =
       glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
@@ -127,18 +134,15 @@ void Application::render() {
   static Model sph(Model::GeometryType::Sphere);
   static Model cub(Model::GeometryType::Cube);
   static Model model("models/chair", "chair.obj");
-  // static Model model("models/table2", "table.obj");
-  // static Model model("models/table_chairs", "table.obj");
-  // pln.draw();
-  // sph.draw();
-  // pln.draw();
-  model.draw();
+
+  _scene->update();
+  _scene->draw();
 
   glFinish();
   // draw all units in current scene for (auto unit : scene.units) unit.draw();
 }
 
-Scene &Application::get_scene() { return *scene; }
+Scene &Application::get_scene() { return *_scene; }
 
 const glm::highp_mat4 &Application::view_projection() {
   return _view_projection;
