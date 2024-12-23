@@ -42,8 +42,7 @@ vec3 Shade() {
 void main() {
   vec3 color = vec3(0);
   color = Shade();
-  // color *= texture(Texture, frag_tex_coord).xyz;
-  color = frag_color;
+  color = texture(Texture, frag_tex_coord).xyz;
   out_color = vec4(color, 1);
-  out_color = vec4(1, 1, 1, 0.5);
+  // out_color = vec4(1, 1, 1, 1);
 }
