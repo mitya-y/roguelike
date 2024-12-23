@@ -105,9 +105,6 @@ bool Application::key_pressed(int key) {
 }
 
 void Application::render() {
-  // timer responce
-  // input responce
-
   // clear frame
   int modes[2];
   glGetIntegerv(GL_POLYGON_MODE, modes);
@@ -119,27 +116,29 @@ void Application::render() {
   _camera_position = glm::vec3(x, 3.0, y);
   glm::vec3 at = glm::vec3(0.2, 2, 0.2);
 
- // _camera_position = glm::vec3(300);
-  // _camera_position = glm::vec3(3);
+  _camera_position = glm::vec3(100);
   at = glm::vec3(0, 0, 0);
 
-  //_camera_position = glm::vec3(0, -300, 100);
-
   _view =
-      glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
+    glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
-  // Render all units
 
-  static Model pln(Model::GeometryType::Plane);
-  static Model sph(Model::GeometryType::Sphere);
-  static Model cub(Model::GeometryType::Cube);
+  // Render all units
   static Model model("models/chair", "chair.obj");
 
   _scene->update();
   _scene->draw();
 
+  model.default_position();
+  model.scale({0.3, 0.3, 0.3});
+  model.rotate({0, 1, 1}, M_PI);
+  model.rotate({0, 0, 1}, M_PI);
+  model.rotate({0, 0, 1}, sin(time) * 10);
+  model.draw();
+
+  // static Model model("models/table", "table.obj");
+
   glFinish();
-  // draw all units in current scene for (auto unit : scene.units) unit.draw();
 }
 
 Scene &Application::get_scene() { return *_scene; }
@@ -157,6 +156,3 @@ double Application::timer() { return clock() / 100000.0; }
 std::shared_ptr<Model> Application::create_model() { return {}; }
 
 void Application::delete_model(std::shared_ptr<Model> model) {}
-
-void Application::draw_model(const Model &model, const Vec3 &scale,
-                             const Vec3 &translate, const Rotation &rotate) {}

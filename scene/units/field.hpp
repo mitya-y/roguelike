@@ -64,8 +64,8 @@ public:
   }
   void update() override {}
 
-  char *serealize() override {}
-  Unit deserealize() override {}
+  // char *serealize() override {}
+  // Unit deserealize() override {}
 
   ~field() {}
 };
