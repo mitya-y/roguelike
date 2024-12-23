@@ -42,8 +42,7 @@ public:
   double timer();
   std::shared_ptr<Model> create_model();
   void delete_model(std::shared_ptr<Model> model);
-  void draw_model(const Model &model, const Vec3 &scale, const Vec3 &translate,
-                  const Rotation &rotate);
+
   // key is GLFW_KEY_*
   bool key_pressed(int key);
 

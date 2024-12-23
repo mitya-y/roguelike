@@ -5,15 +5,14 @@
 #include <string>
 #include <vector>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 struct Vec3 {
   float x, y, z;
 };
 struct Vec2 {
   float x, y;
-};
-struct Rotation {
-  Vec3 axis;
-  float angle;
 };
 
 class Model {
@@ -31,6 +30,10 @@ public:
     Vec3 normal;
     Vec2 texture_coords;
     Vec3 color;
+  };
+  struct Rotation {
+    glm::vec3 axis;
+    float angle;
   };
 
   class ModelData {
@@ -65,9 +68,9 @@ private:
 
   BoundBox _bound_box {};
 
-  Rotation _rotate {1, 1, 1};
-  Vec3 _translate {};
-  Vec3 _scale {};
+  std::vector<Rotation> _rotates {};
+  glm::vec3 _translate {};
+  glm::vec3 _scale {};
 
   GeometryType _type {};
   bool _is_loaded = false;
@@ -99,9 +102,9 @@ private:
   void load_shader(const std::string &shader_name);
 
 public:
-  const Vec3 & scale(const Vec3 &scale = {1, 1, 1});
-  const Rotation & rotate(const Vec3 &axis = {}, float angle = 0);
-  const Vec3 & translate(const Vec3 &translate = {});
+  void scale(const glm::vec3 &scale = {1, 1, 1});
+  void rotate(const glm::vec3 &axis = {}, float angle = 0);
+  void translate(const glm::vec3 &translate = {});
   void default_position();
 
   const BoundBox & get_bound_box();

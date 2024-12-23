@@ -176,37 +176,31 @@ Model::Model(GeometryType geom_type, const std::string &shader_path)
   calculate_bound_box(vertexes);
 }
 
-const Vec3 &Model::scale(const Vec3 &scale) {
+void Model::scale(const glm::vec3 &scale) {
   _scale.x *= abs(scale.x) < float_threshold ? 1 : scale.x;
   _scale.y *= abs(scale.y) < float_threshold ? 1 : scale.y;
   _scale.z *= abs(scale.z) < float_threshold ? 1 : scale.z;
-
-  return _scale;
 }
 
-const Rotation &Model::rotate(const Vec3 &axis, float angle) {
+void Model::rotate(const glm::vec3 &axis, float angle) {
   if (abs(angle) < float_threshold) {
-    return _rotate;
+    return;
   }
 
-  _rotate.axis = axis;
-  _rotate.angle = angle;
-
-  return _rotate;
+  _rotates.push_back({axis, angle});
 }
 
-const Vec3 &Model::translate(const Vec3 &translate) {
+void Model::translate(const glm::vec3 &translate) {
   _translate.x += translate.x;
   _translate.y += translate.y;
   _translate.z += translate.z;
-
-  return _translate;
 }
 
 void Model::default_position() {
   _scale = {1, 1, 1};
-  _rotate = {{}, 0};
-  _translate = {};
+  _rotates.clear();
+  // _rotate = {{0, 1, 0}, 0};
+  _translate = {0, 0, 0};
 }
 
 void Model::calculate_bound_box(const std::vector<Vertex> &vertexes) {
@@ -233,7 +227,7 @@ const Model::BoundBox &Model::get_bound_box() { return _bound_box; }
 Model::Model(Model &&other) {
   _bound_box = other._bound_box;
 
-  _rotate = other._rotate;
+  _rotates = std::move(other._rotates);
   _translate = other._translate;
   _scale = other._scale;
 
@@ -250,7 +244,7 @@ Model &Model::operator=(Model &&other) {
 
   _bound_box = other._bound_box;
 
-  _rotate = other._rotate;
+  _rotates = std::move(other._rotates);
   _translate = other._translate;
   _scale = other._scale;
 
@@ -265,9 +259,20 @@ Model &Model::operator=(Model &&other) {
 void Model::draw() {
   glUseProgram(_program_id);
 
-  auto vp = Application::get_app().view_projection();
+  // auto vp = Application::get_app().view_projection();
+  // auto rotate = glm::rotate(vp, _rotate.angle, _rotate.axis);
+  // auto scale = glm::scale(rotate, _scale);
+  // auto transform = glm::translate(scale, _translate);
+
+  auto transform = Application::get_app().view_projection();
+  for (auto &rot : _rotates) {
+    transform = glm::rotate(transform, rot.angle, rot.axis);
+  }
+  transform = glm::scale(transform, _scale);
+  transform = glm::translate(transform, _translate);
+
   uint32_t vp_id = glGetUniformLocation(_program_id, "MVP");
-  glUniformMatrix4fv(vp_id, 1, false, &vp[0][0]);
+  glUniformMatrix4fv(vp_id, 1, false, &transform[0][0]);
 
   auto cam_pos = Application::get_app().camera_position();
   uint32_t cam_pos_id = glGetUniformLocation(_program_id, "CameraPos");
