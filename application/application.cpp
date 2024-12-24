@@ -120,33 +120,38 @@ void Application::render() {
   _view_projection = _projection * _view;
 
   // Render all units
-  static Model model("models/monach", "Man.obj");
+  static Model boxes("models/box", "box.obj");
+  boxes.default_position();
+  boxes.scale({10, 10, 10});
+  boxes.draw();
 
-  model.default_position();
-  model.scale({0.025, 0.025, 0.025});
-  model.translate({0, 800 + cos(time) * 400, 0});
-  model.draw();
+  // static Model model("models/monach", "Man.obj");
 
-  static Model chair("models/chair", "chair.obj");
-  chair.default_position();
-  chair.scale({0.3, 0.3, 0.3});
-  chair.rotate({0, 1, 1}, M_PI);
-  chair.rotate({0, 0, 1}, M_PI);
-  chair.rotate({0, 0, 1}, sin(time) * 10);
-  chair.draw();
+  // model.default_position();
+  // model.scale({0.025, 0.025, 0.025});
+  // model.translate({0, 800 + cos(time) * 400, 0});
+  // model.draw();
 
-  static Model table("models/table", "table.obj");
-  table.default_position();
-  table.scale({0.2, 0.2, 0.12});
-  table.rotate({0, 1, 0}, M_PI / 2);
-  table.translate({-80, -20, -25});
-  table.draw();
+  // static Model chair("models/chair", "chair.obj");
+  // chair.default_position();
+  // chair.scale({0.3, 0.3, 0.3});
+  // chair.rotate({0, 1, 1}, M_PI);
+  // chair.rotate({0, 0, 1}, M_PI);
+  // chair.rotate({0, 0, 1}, sin(time) * 10);
+  // chair.draw();
 
-  static Model book("models/book", "book.obj");
-  book.default_position();
-  book.scale({2, 2, 2});
-  book.translate({-1, 5, 10});
-  book.draw();
+  // static Model table("models/table", "table.obj");
+  // table.default_position();
+  // table.scale({0.2, 0.2, 0.12});
+  // table.rotate({0, 1, 0}, M_PI / 2);
+  // table.translate({-80, -20, -25});
+  // table.draw();
+
+  // static Model book("models/book", "book.obj");
+  // book.default_position();
+  // book.scale({2, 2, 2});
+  // book.translate({-1, 5, 10});
+  // book.draw();
 
   _scene->update();
   _scene->draw();
