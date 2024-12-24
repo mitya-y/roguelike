@@ -1,6 +1,6 @@
 #include "thing.h"
 
-Thing::Thing(const std::string &name, const u_int32_t weight, const std::string &description) {
+Thing::Thing(const std::string &name, const uint32_t weight, const std::string &description) {
   _name = name;
   _weight = weight;
   _description = description;
@@ -11,7 +11,7 @@ std::string Thing::get_name() {
   return _name;
 }
 
-u_int32_t Thing::get_weight() {
+uint32_t Thing::get_weight() {
   return _weight;
 }
 

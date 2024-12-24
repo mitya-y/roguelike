@@ -1,14 +1,17 @@
 #pragma once
 
 #include <map>
+#include <cstdint>
+#include <stdexcept>
+
 #include "thing.h"
 
 class Inventory {
 private:
   std::map<std::string, Thing> _inventory;
-  u_int32_t _capacity = 20;
+  uint32_t _capacity = 20;
 public:
-  Inventory(u_int32_t capacity);
+  Inventory(uint32_t capacity);
   ~Inventory();
 
   void add_to_inventory(Thing t);
@@ -17,5 +20,5 @@ public:
 
   std::string view_inventory();
 
-  u_int32_t size_of_inventory();
+  uint32_t size_of_inventory();
 };

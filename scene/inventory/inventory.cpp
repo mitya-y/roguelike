@@ -1,8 +1,6 @@
-#include <stdexcept>
-
 #include "inventory.h"
 
-Inventory::Inventory(u_int32_t capacity) :
+Inventory::Inventory(uint32_t capacity) :
   _capacity(capacity), _inventory() {}
 Inventory::~Inventory() = default;
 
@@ -29,10 +27,10 @@ std::string Inventory::view_inventory() {
     s += item.first;
     s += ";";
   }
-  
+
   return s;
 }
 
-u_int32_t Inventory::size_of_inventory() {
+uint32_t Inventory::size_of_inventory() {
   return _inventory.size();
 }

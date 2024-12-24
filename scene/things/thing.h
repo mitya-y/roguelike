@@ -1,21 +1,22 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 class Thing {
 private:
   std::string _name;
-  u_int32_t _weight;
+  uint32_t _weight;
   std::string _description;
 public:
-  Thing(const std::string &name, const u_int32_t weight, const std::string &description);
+  Thing(const std::string &name, const uint32_t weight, const std::string &description);
   ~Thing();
 
   std::string view_description();
 
   std::string get_name();
 
-  u_int32_t get_weight();
+  uint32_t get_weight();
 };
 
 class Note : Thing {
