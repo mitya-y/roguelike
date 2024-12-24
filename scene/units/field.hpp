@@ -3,6 +3,7 @@
 #include "../../model/model.h"
 #include "base_unit.hpp"
 
+#include <cmath>
 #include <fstream>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -27,24 +28,59 @@ public:
     file >> w >> h;
     models.reserve(w * h);
     std::string input;
-    float delta_pos_y = 1, delta_pos_x = 1, scale = 2,
-          pos_y = -1 * (float(h) / 2),
-          pos_x = -1 * (float(w) / 2);
+    float delta_pos_y = 2, delta_pos_x = 2, scale = 2,
+          pos_y = -1 * (float(h) / 2) * scale, pos_x = -1 * (float(w) / 2) * scale;
 
     std::cout << pos_y << ", " << pos_y << std::endl;
+    models.emplace_back(Model::GeometryType::Plane);
+    models.back().load_texture("../datasets/textures/caver.jpg");
+    models.back().scale(glm::vec3(w * scale - 1, 0, h * scale));
+    models.back().translate(glm::vec3(-1, 0, -1));
     while (file >> input) {
       if (input == "q") {
         break;
       }
-      pos_x = -1 * (float(w) / 2);
+      pos_x = -1 * (float(w) / 2) * scale;
       for (const auto x : input) {
         if (x == '*') {
           models.emplace_back("models/box", "box.obj");
-          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().scale(glm::vec3(1, 1, 1));
           models.back().translate(glm::vec3(pos_x, 0, pos_y));
         } else if (x == 'p') {
-          models.emplace_back(Model::GeometryType::Plane);
-          models.back().scale(glm::vec3(scale, scale, scale));
+          models.emplace_back("models/chair", "chair.obj");
+          models.back().scale(glm::vec3(0.03, 0.03, 0.03));
+          models.back().translate(glm::vec3(pos_x, 0, pos_y));
+          models.back().rotate({0, 1, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI / 2);
+          models.back().rotate({0, 0, 1}, 0);
+        } else if (x == 'i') {
+          models.emplace_back("models/chair", "chair.obj");
+          models.back().scale(glm::vec3(0.03, 0.03, 0.03));
+          models.back().translate(glm::vec3(pos_x, 0, pos_y));
+          models.back().rotate({0, 1, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, 0);
+        } else if (x == 'l') {
+          models.emplace_back("models/chair", "chair.obj");
+          models.back().scale(glm::vec3(0.03, 0.03, 0.03));
+          models.back().translate(glm::vec3(pos_x, 0, pos_y));
+          models.back().rotate({0, 1, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, 0);
+          models.back().rotate({0, 0, 1}, 0);
+        } else if (x == 'q') {
+          models.emplace_back("models/chair", "chair.obj");
+          models.back().scale(glm::vec3(0.03, 0.03, 0.03));
+          models.back().translate(glm::vec3(pos_x, 0, pos_y));
+          models.back().rotate({0, 1, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, M_PI);
+          models.back().rotate({0, 0, 1}, -M_PI / 2);
+          models.back().rotate({0, 0, 1}, 0);
+        } else if (x == 'c') {
+          models.emplace_back("models/table", "table.obj");
+          models.back().scale(glm::vec3(0.01, 0.01, 0.01));
           models.back().translate(glm::vec3(pos_x, 0, pos_y));
         } else if (x == '1') {
           models.emplace_back(Model::GeometryType::Plane);

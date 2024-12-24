@@ -1,5 +1,41 @@
 23 25
 ***********************
+*ecececeeeeleeeececece*
+*pcpcpceeeccceeecqcqcq*
+*eeeeeeeeeeeeeeeeeeeee*
+*ecececeeeelmeeececece*
+*pcpcpceeeccceeecqcqcq*
+*eeeeeeeeeeeeeeeeeeeee*
+*ecececeeeeeeeeececece*
+*pcpcpceeeeeeeeecqcqcq*
+*eeeeeeeeeeeee*********
+*meeeeeeeeeeee*eeemeee*
+*eeleeeeeeeeee*eeeeeee*
+*ecceeeeeeeeee*eeeeeee*
+*eeeeeeeeeeeeeeeeeeeee*
+*oooeeeeeeeeee*eeeeeee*
+*oeoeeeeeeeeee*********
+*omeeeeeeeeeeeecceccee*
+*oooooeeeeeeeeeieeieee*
+********e*eeeeecceccee*
+*eeee*eee*eeeeeieeieee*
+*eeee*ecc*eeeeecceccee*
+*eeee*eme*eeeeeieeieee*
+eeeee*****eeeeecceccee*
+*eeeeeeeeeeeeeeieeieee*
+***********************
+q
+
+c - стол
+о - полка
+m - человек
+p - стул вправо
+i - стул вверх
+l - стул вниз
+q - стул влево
+
+23 25
+***********************
 *ecececeeeepeeeececece*
 *pcpcpceeeccceeecpcpcp*
 *eeeeeeeeeeeeeeeeeeeee*
@@ -33,3 +69,5 @@ q
 cc - стол
 о - полка
 р - человек
+
+

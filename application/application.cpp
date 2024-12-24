@@ -133,7 +133,7 @@ void Application::render() {
   auto at = glm::vec3(posx, 0, posy);*/
 
   auto at = glm::vec3(0, 0, 0);
-  _camera_position = glm::vec3(0, 100, 50);
+  _camera_position = glm::vec3(0, 50, 40);
   at = glm::vec3(0, 0, 0);
 
   _view =
