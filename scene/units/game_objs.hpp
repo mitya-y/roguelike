@@ -3,8 +3,11 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <map>
+#include <stdexcept>
 
 #include "base_unit.hpp"
+#include "thing.h"
 
 class Tree {
 public:
@@ -15,27 +18,50 @@ public:
   };
 };
 
-class Person : Unit {
+class Person : public Unit {
 protected:
-  glm::vec2 _positions;
-  std::vector<std::string> _phrases;
   Tree _tree_of_phrases;
-
 public:
-  virtual glm::vec2 get_positions() = 0;
-  virtual void talk(Person *talker) = 0;
+  virtual void talk() = 0;
 
-  Person(int x = 0, int y = 0);
-  ~Person();
+  glm::vec2 get_positions() { return glm::vec2(0); }
+
+  Person(glm::vec2 pos, Tree tree_of_phrases) :
+    Unit((int)pos.x, (int)pos.y), _tree_of_phrases(tree_of_phrases) {};
+  ~Person() override = default;
 };
 
-class Object : Unit {
+
+class Object : public Unit {
 private:
-  glm::vec2 positions;
-
+  std::map<std::string, Thing> _container;
 public:
-  virtual glm::vec2 get_positions() = 0;
+	bool has_thing() {
+		return _container.size() > 0 ? true : false;
+	}
 
-  Object(int x = 0, int y = 0);
-  ~Object();
+  Thing take_thing(std::string& name) {
+    auto iter = _container.find(name);
+    if (iter == _container.end()) {
+      throw std::runtime_error("incorrect name to take");
+    }
+    Thing tmp = iter->second;
+    _container.erase(name);
+    return tmp;
+  }
+
+  std::string view_things() {
+    std::string s = "";
+
+    for(auto &item : _container) {
+      s += item.first;
+      s += ";";
+    }
+
+    return s;
+  }
+
+	Object(glm::vec2 pos, std::map<std::string, Thing> container) :
+    Unit((int)pos.x, (int)pos.y), _container(container) {};
+	~Object() override = default;
 };
