@@ -111,32 +111,42 @@ void Application::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   float time = timer();
-  float dist = 3;
-  float x = cos(time) * dist, y = sin(time) * dist;
-  _camera_position = glm::vec3(x, 3.0, y);
-  glm::vec3 at = glm::vec3(0.2, 2, 0.2);
 
   _camera_position = glm::vec3(100);
-  at = glm::vec3(0, 0, 0);
+  // _camera_position = glm::vec3(0, 100, 100);
+  auto at = glm::vec3(0, 0, 0);
 
   _view =
     glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
 
   // Render all units
-  static Model model("models/chair", "chair.obj");
+  static Model model("models/monach", "Man.obj");
+
+  model.default_position();
+  model.scale({0.025, 0.025, 0.025});
+  model.translate({0, 800 + cos(time) * 400, 0});
+  model.draw();
+
+  static Model chair("models/chair", "chair.obj");
+  chair.default_position();
+  chair.scale({0.3, 0.3, 0.3});
+  chair.rotate({0, 1, 1}, M_PI);
+  chair.rotate({0, 0, 1}, M_PI);
+  chair.rotate({0, 0, 1}, sin(time) * 10);
+  chair.draw();
+
+  static Model table("models/table", "table.obj");
+  table.default_position();
+  table.scale({0.2, 0.2, 0.2});
+  table.rotate({0, 1, 0}, M_PI / 2);
+  table.translate({-80, -20, -25});
+  table.draw();
+
+  // static Model model("models/table", "table.obj");
 
   _scene->update();
   _scene->draw();
-
-  model.default_position();
-  model.scale({0.3, 0.3, 0.3});
-  model.rotate({0, 1, 1}, M_PI);
-  model.rotate({0, 0, 1}, M_PI);
-  model.rotate({0, 0, 1}, sin(time) * 10);
-  model.draw();
-
-  // static Model model("models/table", "table.obj");
 
   glFinish();
 }

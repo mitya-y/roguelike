@@ -16,7 +16,7 @@
 
 Model::ModelData::ModelData(std::vector<Vertex> &vertexes,
                             std::vector<uint32_t> &indexes) {
-  // create and bind vertex array
+  // // create and bind vertex array
   glGenVertexArrays(1, &_vertex_array);
   glBindVertexArray(_vertex_array);
 
@@ -115,16 +115,17 @@ Model::ModelData::ModelData(Model::ModelData &&other) {
 
 void Model::ModelData::load_texture(std::string_view filename) {
   //  load and generate the texture
-  int nrChannels;
+  int channels;
   unsigned char *data = stbi_load(filename.data(), &_texture_widht,
-                                  &_texture_height, &nrChannels, 0);
+                                  &_texture_height, &channels, 0);
   if (data) {
     glGenTextures(1, &_texture);
     glBindTexture(GL_TEXTURE_2D, _texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _texture_widht, _texture_height, 0,
-                 GL_RGB, GL_UNSIGNED_BYTE, data);
+    GLenum format = channels == 3 ? GL_RGB : GL_RGBA;
+    glTexImage2D(GL_TEXTURE_2D, 0, format, _texture_widht, _texture_height, 0,
+                 format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
   } else {
     std::cout << "Failed to load texture" << std::endl;
