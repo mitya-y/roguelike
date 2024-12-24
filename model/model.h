@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -38,22 +39,21 @@ public:
 
   class ModelData {
     // opengl stuff
-    uint32_t _vertex_array {};
-    uint32_t _vertex_buffer {};
-    uint32_t _index_buffer {};
+    uint32_t _vertex_array{};
+    uint32_t _vertex_buffer{};
+    uint32_t _index_buffer{};
     uint32_t _indexes_number = 0;
 
-    uint32_t _texture {};
-    int _texture_height {};
-    int _texture_widht {};
+    uint32_t _texture{};
+    int _texture_height{};
+    int _texture_widht{};
 
   public:
     void load_texture(std::string_view filename);
 
     void draw();
 
-    ModelData(std::vector<Vertex> &vertexes,
-              std::vector<uint32_t> &indexes);
+    ModelData(std::vector<Vertex> &vertexes, std::vector<uint32_t> &indexes);
     ~ModelData();
 
     ModelData(const ModelData &other) = delete;
@@ -66,16 +66,16 @@ public:
 private:
   std::vector<ModelData> _model_datas;
 
-  BoundBox _bound_box {};
+  BoundBox _bound_box{};
 
-  std::vector<Rotation> _rotates {};
-  glm::vec3 _translate {};
-  glm::vec3 _scale {};
+  std::vector<Rotation> _rotates{};
+  glm::vec3 _translate{};
+  glm::vec3 _scale{};
 
-  GeometryType _type {};
+  GeometryType _type{};
   bool _is_loaded = false;
 
-  uint32_t _program_id {};
+  uint32_t _program_id{};
 
 public:
   Model(std::string_view path, std::string_view filename);
@@ -87,6 +87,11 @@ public:
   Model(Model &&other);
   Model &operator=(Model &&other);
 
+  void load_texture(std::string_view path) {
+    for (auto &data : _model_datas) {
+      data.load_texture(path);
+    }
+  }
   ~Model();
 
 private:
@@ -107,7 +112,7 @@ public:
   void translate(const glm::vec3 &translate = {});
   void default_position();
 
-  const BoundBox & get_bound_box();
+  const BoundBox &get_bound_box();
 
   void draw();
 };

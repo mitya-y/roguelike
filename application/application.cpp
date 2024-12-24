@@ -111,6 +111,7 @@ void Application::render() {
 
   float time = timer();
 
+  /*
   static int posx = 0, posy = 0;
 
   if (key_pressed(GLFW_KEY_W)) {
@@ -126,15 +127,21 @@ void Application::render() {
     posx++;
   }
 
-  _camera_position = glm::vec3(100);
+  */
+ /* _camera_position = glm::vec3(100);
   _camera_position = glm::vec3(0 + posx, 150, 200 - posy);
-  auto at = glm::vec3(posx, 0, posy);
+  auto at = glm::vec3(posx, 0, posy);*/
+
+  auto at = glm::vec3(0, 0, 0);
+  _camera_position = glm::vec3(0, 50, 40);
+  at = glm::vec3(0, 0, 0);
 
   _view =
     glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
 
   // Render all units
+  /*
   static Model box("models/box", "box.obj");
   for (int x = -5; x <= 5; x++) {
     for (int y = -5; y <= 5; y++) {
@@ -144,7 +151,12 @@ void Application::render() {
       box.draw();
     }
   }
-
+  */
+  //static Model boxes("models/box", "box.obj");
+  //boxes.default_position();
+  //boxes.scale({10, 10, 10});
+  //boxes.draw();
+/*
   static Model model("models/monach", "Man.obj");
 
   float scale = 0.035;
@@ -176,9 +188,24 @@ void Application::render() {
   book.scale({2, 2, 2});
   book.translate({-15, 30, 0});
   book.draw();
+  */
+
+  //static Model model("models/chair", "chair.obj");
+  //static Model model(Model::GeometryType::Cube);
+  //model.scale({2, 2, 2});
+  //model.draw();
 
   _scene->update();
   _scene->draw();
+
+  //model.default_position();
+  //model.scale({0.9999, 0.99999, 0.9999});
+  //model.rotate({0, 1, 1}, M_PI);
+  //model.rotate({0, 0, 1}, M_PI);
+  //model.rotate({0, 0, 1}, sin(time) * 10);
+  //model.draw();
+
+  // static Model model("models/table", "table.obj");
 
   glFinish();
 }

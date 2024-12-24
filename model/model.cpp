@@ -179,9 +179,9 @@ Model::Model(GeometryType geom_type, const std::string &shader_path)
 }
 
 void Model::scale(const glm::vec3 &scale) {
-  _scale.x *= abs(scale.x) < float_threshold ? 1 : scale.x;
-  _scale.y *= abs(scale.y) < float_threshold ? 1 : scale.y;
-  _scale.z *= abs(scale.z) < float_threshold ? 1 : scale.z;
+  _scale.x = abs(scale.x) < float_threshold ? 1 : scale.x;
+  _scale.y = abs(scale.y) < float_threshold ? 1 : scale.y;
+  _scale.z = abs(scale.z) < float_threshold ? 1 : scale.z;
 }
 
 void Model::rotate(const glm::vec3 &axis, float angle) {
@@ -193,9 +193,9 @@ void Model::rotate(const glm::vec3 &axis, float angle) {
 }
 
 void Model::translate(const glm::vec3 &translate) {
-  _translate.x += translate.x;
-  _translate.y += translate.y;
-  _translate.z += translate.z;
+  _translate.x = translate.x;
+  _translate.y = translate.y;
+  _translate.z = translate.z;
 }
 
 void Model::default_position() {
@@ -229,7 +229,7 @@ const Model::BoundBox &Model::get_bound_box() { return _bound_box; }
 Model::Model(Model &&other) {
   _bound_box = other._bound_box;
 
-  _rotates = std::move(other._rotates);
+  _rotates = other._rotates;
   _translate = other._translate;
   _scale = other._scale;
 
@@ -246,7 +246,7 @@ Model &Model::operator=(Model &&other) {
 
   _bound_box = other._bound_box;
 
-  _rotates = std::move(other._rotates);
+  _rotates = other._rotates;
   _translate = other._translate;
   _scale = other._scale;
 

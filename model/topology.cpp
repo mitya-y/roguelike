@@ -209,7 +209,7 @@ void Model::load_plane(std::vector<Vertex> &vertexes,
     vert.color = {1, 1, 0};
   }
 
-  float scale = 1;
+  float scale = 0.5;
 
   vertexes[0].position = {scale, 0, scale};
   vertexes[1].position = {scale, 0, -scale};
