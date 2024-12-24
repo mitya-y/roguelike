@@ -116,7 +116,7 @@ void Application::render() {
   _camera_position = glm::vec3(x, 3.0, y);
   glm::vec3 at = glm::vec3(0.2, 2, 0.2);
 
-  _camera_position = glm::vec3(100);
+  _camera_position = glm::vec3(0, 100, 100);
   at = glm::vec3(0, 0, 0);
 
   _view =
@@ -124,17 +124,20 @@ void Application::render() {
   _view_projection = _projection * _view;
 
   // Render all units
-  static Model model("models/chair", "chair.obj");
+  //static Model model("models/chair", "chair.obj");
+  //static Model model(Model::GeometryType::Plane);
+  //model.scale({2, 2, 2});
+  //model.draw();
 
   _scene->update();
   _scene->draw();
 
-  model.default_position();
-  model.scale({0.3, 0.3, 0.3});
-  model.rotate({0, 1, 1}, M_PI);
-  model.rotate({0, 0, 1}, M_PI);
-  model.rotate({0, 0, 1}, sin(time) * 10);
-  model.draw();
+  //model.default_position();
+  //model.scale({0.9999, 0.99999, 0.9999});
+  //model.rotate({0, 1, 1}, M_PI);
+  //model.rotate({0, 0, 1}, M_PI);
+  //model.rotate({0, 0, 1}, sin(time) * 10);
+  //model.draw();
 
   // static Model model("models/table", "table.obj");
 

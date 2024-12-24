@@ -14,9 +14,7 @@ private:
   std::vector<Model> models;
 
 public:
-  field(int x = 0, int y = 0) {
-    load("../scene.txt");
-  }
+  field(int x = 0, int y = 0) { load("../scene.txt"); }
 
   void load(const std::string &path) {
     std::ifstream file(path);
@@ -26,34 +24,47 @@ public:
     }
 
     std::string input;
+    float delta_pos_y = 1, delta_pos_x = 1, pos_x = 0, pos_y = 0, scale = 2;
+
     while (file >> input) {
       if (input == "q") {
         break;
       }
       for (const auto x : input) {
         if (x == '*') {
-          // auto model = Model(Model::GeometryType::Plane);
-          // models.emplace_back({std::move(model), glm::mat4()});
-          // models.push_back({Model(Model::GeometryType::Plane), glm::mat4()});
-          // Model model(Model::GeometryType::Plane);
+          std::cout << pos_x << ", " << pos_y << std::endl;
           models.emplace_back(Model::GeometryType::Plane);
-          // models.emplace_back(Model(Model::GeometryType::Plane));
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, 0, 0));
         } else if (x == 'c') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         } else if (x == 'p') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         } else if (x == '1') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         } else if (x == '2') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         } else if (x == '3') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         } else if (x == '4') {
           models.emplace_back(Model::GeometryType::Plane);
+          models.back().scale(glm::vec3(scale, scale, scale));
+          models.back().translate(glm::vec3(pos_x, pos_y, 0));
         }
+        pos_x += delta_pos_x;
       }
+      pos_y += delta_pos_y;
     }
-
     file.close();
   }
 
