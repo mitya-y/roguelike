@@ -2,8 +2,10 @@
 
 #include "../../model/model.h"
 #include "base_unit.hpp"
+#include "game_objs.hpp"
 
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <glm/glm.hpp>
 #include <iostream>
@@ -13,6 +15,7 @@
 class field : public Unit {
 private:
   std::vector<Model> models;
+  std::vector<Table> tables;
 
 public:
   field(int x = 0, int y = 0) { load("../scene.txt"); }
@@ -29,7 +32,8 @@ public:
     models.reserve(w * h);
     std::string input;
     float delta_pos_y = 2, delta_pos_x = 2, scale = 2,
-          pos_y = -1 * (float(h) / 2) * scale, pos_x = -1 * (float(w) / 2) * scale;
+          pos_y = -1 * (float(h) / 2) * scale,
+          pos_x = -1 * (float(w) / 2) * scale;
 
     std::cout << pos_y << ", " << pos_y << std::endl;
     models.emplace_back(Model::GeometryType::Plane);
@@ -79,6 +83,15 @@ public:
           models.back().rotate({0, 0, 1}, -M_PI / 2);
           models.back().rotate({0, 0, 1}, 0);
         } else if (x == 'c') {
+          float has_book = rand() % 2;
+          if (has_book) {
+            tables.emplace_back(1, 1);
+            tables.back().set_pos(pos_x, 0, pos_y);
+            tables.back().add_book();
+          }
+          models.emplace_back("model/book", "book.obj");
+          models.back().scale(glm::vec3(0.01, 0.01, 0.01));
+          models.back().translate(glm::vec3(pos_x, 0, pos_y));
           models.emplace_back("models/table", "table.obj");
           models.back().scale(glm::vec3(0.01, 0.01, 0.01));
           models.back().translate(glm::vec3(pos_x, 0, pos_y));
@@ -111,6 +124,7 @@ public:
       model.draw();
     }
   }
+
   void update() override {}
 
   // char *serealize() override {}
