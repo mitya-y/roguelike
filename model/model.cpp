@@ -9,6 +9,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 
+// #define OBJL_CONSOLE_OUTPUT
 #include "OBJ-Loader/Source/OBJ_Loader.h"
 
 #include "application.hpp"
@@ -135,6 +136,7 @@ Model::Model(std::string_view path, std::string_view filename) {
     }
     auto full_name =
         std::string(ASSETS_DIRECTORY) + '/' + path.data() + '/' + tex_name;
+    // std::cout << full_name << std::endl;
     _model_datas.back().load_texture(full_name);
   }
 

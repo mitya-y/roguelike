@@ -51,7 +51,6 @@ Application::Application() {
   glDebugMessageCallback(glDebugOutput, NULL);
   glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL,
   GL_TRUE);*/
-
 }
 
 Application::~Application() {}
@@ -113,7 +112,7 @@ void Application::render() {
   float time = timer();
 
   _camera_position = glm::vec3(100);
-  // _camera_position = glm::vec3(0, 100, 100);
+  _camera_position = glm::vec3(0, 100, 100);
   auto at = glm::vec3(0, 0, 0);
 
   _view =
@@ -138,12 +137,16 @@ void Application::render() {
 
   static Model table("models/table", "table.obj");
   table.default_position();
-  table.scale({0.2, 0.2, 0.2});
+  table.scale({0.2, 0.2, 0.12});
   table.rotate({0, 1, 0}, M_PI / 2);
   table.translate({-80, -20, -25});
   table.draw();
 
-  // static Model model("models/table", "table.obj");
+  static Model book("models/book", "book.obj");
+  book.default_position();
+  book.scale({2, 2, 2});
+  book.translate({-1, 5, 10});
+  book.draw();
 
   _scene->update();
   _scene->draw();
