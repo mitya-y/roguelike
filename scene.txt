@@ -1,28 +1,28 @@
+23 25
 ***********************
-q
-* c c c    p    c c c *
-*pcpcpc   ccc   cpcpcp*
-*                     *
-* c c c    p    c c c *
-*pcpcpc   ccc   cpcpcp*
-*                     *
-* c c c         c c c *
-*pcpcpc         cpcpcp*
-*             *********
-*             *       *
-*  p          *       *
-* cc          *  1    *
-*                     *
-*ooo          *       *
-*o o          *********
-*o  3          cc cc  *
-*ooooo         p  p   *
-******** *     cc cc  *
-*    * 2 *     p  p   *
-*    * cc*     cc cc  *
-*    * b *     p  p   *
-4    *****     cc cc  *
-*              p  p   *
+*ecececeeeepeeeececece*
+*pcpcpceeeccceeecpcpcp*
+*eeeeeeeeeeeeeeeeeeeee*
+*ecececeeeepeeeececece*
+*pcpcpceeeccceeecpcpcp*
+*eeeeeeeeeeeeeeeeeeeee*
+*ecececeeeeeeeeececece*
+*pcpcpceeeeeeeeecpcpcp*
+*eeeeeeeeeeeee*********
+*eeeeeeeeeeeee*eeeeeee*
+*eepeeeeeeeeee*eeeeeee*
+*ecceeeeeeeeee*ee1eeee*
+*eeeeeeeeeeeeeeeeeeeee*
+*oooeeeeeeeeee*eeeeeee*
+*oeoeeeeeeeeee*********
+*oee3eeeeeeeeeecceccee*
+*oooooeeeeeeeeepeepeee*
+********e*eeeeecceccee*
+*eeee*e2e*eeeeepeepeee*
+*eeee*ecc*eeeeecceccee*
+*eeee*ebe*eeeeepeepeee*
+4eeee*****eeeeecceccee*
+*eeeeeeeeeeeeeepeepeee*
 ***********************
 q
 4 - вход
