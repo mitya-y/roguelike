@@ -261,17 +261,12 @@ Model &Model::operator=(Model &&other) {
 void Model::draw() {
   glUseProgram(_program_id);
 
-  // auto vp = Application::get_app().view_projection();
-  // auto rotate = glm::rotate(vp, _rotate.angle, _rotate.axis);
-  // auto scale = glm::scale(rotate, _scale);
-  // auto transform = glm::translate(scale, _translate);
-
   auto transform = Application::get_app().view_projection();
+  transform = glm::translate(transform, _translate);
   for (auto &rot : _rotates) {
     transform = glm::rotate(transform, rot.angle, rot.axis);
   }
   transform = glm::scale(transform, _scale);
-  transform = glm::translate(transform, _translate);
 
   uint32_t vp_id = glGetUniformLocation(_program_id, "MVP");
   glUniformMatrix4fv(vp_id, 1, false, &transform[0][0]);

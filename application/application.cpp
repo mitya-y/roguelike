@@ -36,7 +36,7 @@ Application::Application() {
   }
 
   glClearColor(0.30, 0.47, 0.8, 1);
-  //glClearColor(0.0, 0.0, 0.0, 0.0);
+  // glClearColor(0.0, 0.0, 0.0, 0.0);
   glEnable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -111,47 +111,71 @@ void Application::render() {
 
   float time = timer();
 
+  static int posx = 0, posy = 0;
+
+  if (key_pressed(GLFW_KEY_W)) {
+    posy++;
+  }
+  if (key_pressed(GLFW_KEY_S)) {
+    posy--;
+  }
+  if (key_pressed(GLFW_KEY_A)) {
+    posx--;
+  }
+  if (key_pressed(GLFW_KEY_D)) {
+    posx++;
+  }
+
   _camera_position = glm::vec3(100);
-  _camera_position = glm::vec3(0, 100, 100);
-  auto at = glm::vec3(0, 0, 0);
+  _camera_position = glm::vec3(0 + posx, 150, 200 - posy);
+  auto at = glm::vec3(posx, 0, posy);
 
   _view =
     glm::lookAt(_camera_position, at, glm::vec3(0.0, 1.0, 0.0));
   _view_projection = _projection * _view;
 
   // Render all units
-  static Model boxes("models/box", "box.obj");
-  boxes.default_position();
-  boxes.scale({10, 10, 10});
-  boxes.draw();
+  static Model box("models/box", "box.obj");
+  for (int x = -5; x <= 5; x++) {
+    for (int y = -5; y <= 5; y++) {
+      box.default_position();
+      box.scale({10, 10, 10});
+      box.translate({x * 15, 0, y * 15});
+      box.draw();
+    }
+  }
 
-  // static Model model("models/monach", "Man.obj");
+  static Model model("models/monach", "Man.obj");
 
-  // model.default_position();
-  // model.scale({0.025, 0.025, 0.025});
-  // model.translate({0, 800 + cos(time) * 400, 0});
-  // model.draw();
+  float scale = 0.035;
+  model.default_position();
+  model.scale({scale, scale, scale});
+  model.rotate({0, 1, 0}, M_PI);
+  model.translate({0, 10, 0});
+  model.translate({posx, 0, posy});
+  model.draw();
 
-  // static Model chair("models/chair", "chair.obj");
-  // chair.default_position();
-  // chair.scale({0.3, 0.3, 0.3});
-  // chair.rotate({0, 1, 1}, M_PI);
-  // chair.rotate({0, 0, 1}, M_PI);
-  // chair.rotate({0, 0, 1}, sin(time) * 10);
-  // chair.draw();
+  static Model chair("models/chair", "chair.obj");
+  chair.default_position();
+  chair.scale({0.3, 0.3, 0.3});
+  chair.rotate({0, 1, 1}, M_PI);
+  chair.rotate({0, 0, 1}, M_PI);
+  chair.rotate({0, 0, 1}, sin(time) * 10);
+  chair.translate({50, 10, 50});
+  chair.draw();
 
-  // static Model table("models/table", "table.obj");
-  // table.default_position();
-  // table.scale({0.2, 0.2, 0.12});
-  // table.rotate({0, 1, 0}, M_PI / 2);
-  // table.translate({-80, -20, -25});
-  // table.draw();
+  static Model table("models/table", "table.obj");
+  table.default_position();
+  table.scale({0.2, 0.2, 0.12});
+  table.rotate({0, 1, 0}, M_PI / 2);
+  table.translate({-16, 15, -3});
+  table.draw();
 
-  // static Model book("models/book", "book.obj");
-  // book.default_position();
-  // book.scale({2, 2, 2});
-  // book.translate({-1, 5, 10});
-  // book.draw();
+  static Model book("models/book", "book.obj");
+  book.default_position();
+  book.scale({2, 2, 2});
+  book.translate({-15, 30, 0});
+  book.draw();
 
   _scene->update();
   _scene->draw();
