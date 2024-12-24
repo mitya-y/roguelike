@@ -1,7 +1,7 @@
 #include "player.h"
 // #include "game_objs.hpp"
 
-Player::Player(glm::vec2 pos) : _pos(pos),
+Player::Player(const glm::vec2 &pos) : _pos(pos),
 	_inventory(20) {};
 
 Player::~Player() = default;
@@ -28,8 +28,8 @@ void Player::draw() {}
 
 void Player::update() {
 	auto &app = Application::get_app();
-	auto scene = app.get_scene();
-	glm::vec2 positions = _pos;
+	auto &scene = app.get_scene();
+
 	for (auto &&[name, unit] : scene) {
 		Person *pers = dynamic_cast<Person *>(unit.get());
 		if (pers == nullptr) {
@@ -39,25 +39,18 @@ void Player::update() {
 			pers->talk();
 		}
 	}
-	if (app.key_pressed('W')) {
-		if (positions.y < scene.get_bound().y - 1) {
-			positions.y++;
-		}
+
+	if (app.key_pressed(GLFW_KEY_W)) {
+		_pos.y++;
 	}
-	if (app.key_pressed('A')) {
-		if (positions.x > 1) {
-			positions.x--;
-		}
+	if (app.key_pressed(GLFW_KEY_A)) {
+		_pos.x--;
 	}
-	if (app.key_pressed('S')) {
-		if (positions.y > 1) {
-			positions.y--;
-		}
+	if (app.key_pressed(GLFW_KEY_S)) {
+		_pos.y--;
 	}
-	if (app.key_pressed('D')) {
-		if (positions.x < scene.get_bound().x - 1) {
-			positions.x++;
-		}
+	if (app.key_pressed(GLFW_KEY_D)) {
+		_pos.x++;
 	}
 }
 

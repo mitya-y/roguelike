@@ -45,7 +45,7 @@ public:
     if (iter == _container.end()) {
       throw std::runtime_error("incorrect name to take");
     }
-    Thing tmp = iter->second;
+    Thing tmp = std::move(iter->second);
     _container.erase(name);
     return tmp;
   }

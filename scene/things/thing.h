@@ -19,7 +19,7 @@ public:
   uint32_t get_weight();
 };
 
-class Note : Thing {
+class Note : public Thing {
 private:
   std::string _containing;
 public:

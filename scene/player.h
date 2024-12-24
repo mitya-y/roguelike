@@ -11,7 +11,7 @@ private:
 	Inventory _inventory;
 
 public:
-	Player(glm::vec2 pos);
+	Player(const glm::vec2 &pos = {});
 
 	~Player() override;
 
