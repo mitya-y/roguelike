@@ -19,7 +19,7 @@ std::string Thing::view_description() {
   return _description;
 }
 
-Note::Note(const std::string &containing, const std::string &name, const std::string &description) : 
+Note::Note(const std::string &containing, const std::string &name, const std::string &description) :
   Thing(name, 1, description) {
   _containing = containing;
 }
