@@ -41,6 +41,7 @@ public:
 
   template <typename UnitType, typename... Args>
   std::shared_ptr<UnitType> create_unit(std::string name, Args &&...args) {
+    _units[name] = nullptr;
     auto unit = std::make_shared<UnitType>(args...);
     _units[name] = unit;
     return unit;

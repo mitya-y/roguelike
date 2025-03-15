@@ -2,6 +2,7 @@
 
 #include "../../model/model.h"
 #include "base_unit.hpp"
+#include "player.h"
 
 #include <cmath>
 #include <fstream>
@@ -15,9 +16,9 @@ private:
   std::vector<Model> models;
 
 public:
-  field(int x = 0, int y = 0) { load("../scene.txt"); }
+  field(Scene &scene) { load("../scene.txt", scene); }
 
-  void load(const std::string &path) {
+  void load(const std::string &path, Scene &scene) {
     std::ifstream file(path);
 
     if (!file) {
@@ -78,6 +79,8 @@ public:
           models.back().rotate({0, 0, 1}, M_PI);
           models.back().rotate({0, 0, 1}, -M_PI / 2);
           models.back().rotate({0, 0, 1}, 0);
+        } else if (x == 'a') {
+          scene.create_unit<Player>("player", glm::vec2(pos_x, pos_y));
         } else if (x == 'c') {
           models.emplace_back("models/table", "table.obj");
           models.back().scale(glm::vec3(0.01, 0.01, 0.01));

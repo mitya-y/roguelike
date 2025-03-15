@@ -9,6 +9,7 @@ class Player : public Unit {
 private:
 	glm::vec2 _pos {};
 	Inventory _inventory;
+	std::optional<Model> _model {};
 
 public:
 	Player(const glm::vec2 &pos = {});

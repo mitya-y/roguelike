@@ -1,8 +1,15 @@
 #include "player.h"
 // #include "game_objs.hpp"
 
-Player::Player(const glm::vec2 &pos) : _pos(pos),
-	_inventory(20) {};
+Player::Player(const glm::vec2 &pos) : _pos(pos), _inventory(20) {
+  _model = Model("models/monach", "Man.obj");
+  float scale = 0.035;
+  _model->default_position();
+  _model->scale({scale, scale, scale});
+  _model->rotate({0, 1, 0}, M_PI);
+  _model->translate({0, 10, 0});
+  _model->translate({pos.x, 0, pos.y});
+}
 
 Player::~Player() = default;
 
@@ -24,7 +31,17 @@ std::string Player::choose_what_take(Object *_object) {
 }
 void Player::talk(Person* talker) {}
 
-void Player::draw() {}
+void Player::draw() {
+  // _model->draw();
+  static Model model("models/monach", "Man.obj");
+
+  float scale = 0.0028;
+  model.default_position();
+  model.scale({scale, scale, scale});
+  model.rotate({0, 1, 0}, M_PI);
+  model.translate({_pos.x, 10, _pos.y});
+  model.draw();
+}
 
 void Player::update() {
 	auto &app = Application::get_app();
@@ -40,17 +57,26 @@ void Player::update() {
 		}
 	}
 
+	float delta = 1;
 	if (app.key_pressed(GLFW_KEY_W)) {
-		_pos.y++;
+		_pos.y -= delta;
 	}
 	if (app.key_pressed(GLFW_KEY_A)) {
-		_pos.x--;
+		_pos.x -= delta;
 	}
 	if (app.key_pressed(GLFW_KEY_S)) {
-		_pos.y--;
+		_pos.y += delta;
 	}
 	if (app.key_pressed(GLFW_KEY_D)) {
-		_pos.x++;
+		_pos.x += delta;
 	}
+
+  if (_model.has_value()) {
+  	float scale = 0.035;
+  	_model->default_position();
+  	_model->scale({scale, scale, scale});
+  	_model->rotate({0, 1, 0}, M_PI);
+  	_model->translate({_pos.x, 10, _pos.y});
+  }
 }
 

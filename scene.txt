@@ -10,7 +10,7 @@
 *pcpcpceeeeeeeeecqcqcq*
 *eeeeeeeeeeeee*********
 *meeeeeeeeeeee*eeemeee*
-*eeleeeeeeeeee*eeeeeee*
+*eeleeeeeaeeee*eeeeeee*
 *ecceeeeeeeeee*eeeeeee*
 *eeeeeeeeeeeeeeeeeeeee*
 *oooeeeeeeeeee*eeeeeee*
@@ -28,6 +28,7 @@ q
 
 c - стол
 о - полка
+a - герой
 m - человек
 p - стул вправо
 i - стул вверх
